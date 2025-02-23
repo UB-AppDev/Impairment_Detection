@@ -36,9 +36,9 @@ export default function TabLayout() {
         name="temp"
         options={{
           title: 'Wallet',
-          tabBarIcon: ({ focused }) => (
-            <IconSymbol size={24} name="wallet" color={focused ? activeColor : inactiveColor} />
-          ),
+          // tabBarIcon: ({ focused }) => (
+          //   <IconSymbol size={24} name="wallet" color={focused ? activeColor : inactiveColor} />
+          // ),
         }}
       />
 

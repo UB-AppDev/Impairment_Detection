@@ -2,10 +2,10 @@ import React from 'react';
 import { Squircle } from '@/components/squircle';
 import { ThemedText } from '@/components/ThemedText';
 import { ScrollView, StyleSheet, View, TouchableOpacity } from 'react-native';
-import { useNavigation } from '@react-navigation/native';
+import { useRouter } from "expo-router";
 
 export default function ProfileScreen() {
-  const navigation = useNavigation();
+  const router = useRouter();
 
   return (
     <View style={styles.screenContainer}>
@@ -17,19 +17,19 @@ export default function ProfileScreen() {
         <View style={styles.squircleContainer}>
           <TouchableOpacity
             style={styles.squircleItem}
-            onPress={() => navigation.navigate('TestDetail', { testId: 1 })}
+            onPress={() => router.push("/(stack)/accuracy")} // Redirects to Accuracy
           >
             <Squircle imageUri="https://via.placeholder.com/200" text="Test 1" />
           </TouchableOpacity>
           <TouchableOpacity
             style={styles.squircleItem}
-            onPress={() => navigation.navigate('TestDetail', { testId: 2 })}
+            // onPress={() => navigation.navigate('TestDetail', { testId: 2 })}
           >
             <Squircle imageUri="https://via.placeholder.com/200" text="Test 2" />
           </TouchableOpacity>
           <TouchableOpacity
             style={styles.squircleItem}
-            onPress={() => navigation.navigate('TestDetail', { testId: 3 })}
+            // onPress={() => navigation.navigate('TestDetail', { testId: 3 })}
           >
             <Squircle imageUri="https://via.placeholder.com/200" text="Test 3" />
           </TouchableOpacity>
