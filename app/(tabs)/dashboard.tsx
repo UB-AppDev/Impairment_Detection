@@ -1,94 +1,63 @@
+import React from 'react';
 import { Squircle } from '@/components/squircle';
-import TestResultCard from '@/components/TestResultCard';
 import { ThemedText } from '@/components/ThemedText';
-import { ScrollView, StyleSheet, View } from 'react-native';
+import { ScrollView, StyleSheet, View, TouchableOpacity } from 'react-native';
+import { useNavigation } from '@react-navigation/native';
 
 export default function ProfileScreen() {
+  const navigation = useNavigation();
+
   return (
-    // We wrap everything in a parent View to ensure a solid white background
     <View style={styles.screenContainer}>
       <ScrollView contentContainerStyle={styles.scrollContent}>
+        {/* Header or other components can go here */}
         <ThemedText type="title" style={styles.darkText}>
           Dashboard
         </ThemedText>
-
-        {/* Horizontal Scroll Section */}
-        <View style={styles.horizontalSection}>
-          <ScrollView
-            horizontal
-            nestedScrollEnabled
-            showsHorizontalScrollIndicator={false}
-            contentContainerStyle={styles.horizontalContainer}
+        <View style={styles.squircleContainer}>
+          <TouchableOpacity
+            style={styles.squircleItem}
+            onPress={() => navigation.navigate('TestDetail', { testId: 1 })}
           >
             <Squircle imageUri="https://via.placeholder.com/200" text="Test 1" />
+          </TouchableOpacity>
+          <TouchableOpacity
+            style={styles.squircleItem}
+            onPress={() => navigation.navigate('TestDetail', { testId: 2 })}
+          >
             <Squircle imageUri="https://via.placeholder.com/200" text="Test 2" />
+          </TouchableOpacity>
+          <TouchableOpacity
+            style={styles.squircleItem}
+            onPress={() => navigation.navigate('TestDetail', { testId: 3 })}
+          >
             <Squircle imageUri="https://via.placeholder.com/200" text="Test 3" />
-            <Squircle imageUri="https://via.placeholder.com/200" text="Test 4" />
-          </ScrollView>
+          </TouchableOpacity>
+          {/* Add additional Squircle buttons as needed */}
         </View>
-
-        <ThemedText type="default" style={styles.darkText}>
-          Past Tests
-        </ThemedText>
-        <TestResultCard
-          name="Jane Doe"
-          role="Patient"
-          status="Pass"
-          date="2/18/2025"
-          time="21:06:00 - 21:12:00"
-          testName="Item Accuracy"
-        />
-        <TestResultCard
-          name="Jane Doe"
-          role="Patient"
-          status="Fail"
-          date="2/13/2025"
-          time="21:00:00 - 21:05:00"
-          testName="Item Accuracy"
-        />
-        <TestResultCard
-          name="Jane Doe"
-          role="Patient"
-          status="Fail"
-          date="2/13/2025"
-          time="21:00:00 - 21:05:00"
-          testName="Item Accuracy"
-        />
-        <TestResultCard
-          name="Jane Doe"
-          role="Patient"
-          status="Fail"
-          date="2/13/2025"
-          time="21:00:00 - 21:05:00"
-          testName="Item Accuracy"
-        />
       </ScrollView>
     </View>
   );
 }
 
 const styles = StyleSheet.create({
-  // Ensures the entire screen area is white, including bottom
   screenContainer: {
     flex: 1,
     backgroundColor: '#fff',
   },
-  // Adds padding for the ScrollView content
   scrollContent: {
     padding: 20,
   },
-  // Dark text override
   darkText: {
     color: '#000',
   },
-  // Horizontal section is full width with some vertical spacing
-  horizontalSection: {
-    width: '100%',
-    marginVertical: 10,
-  },
-  // Lays out squircle cards in a row
-  horizontalContainer: {
+  squircleContainer: {
     flexDirection: 'row',
-    paddingVertical: 10,
+    flexWrap: 'wrap',
+    justifyContent: 'center',
+    marginTop: 30,
+  },
+  squircleItem: {
+    margin: 10,
   },
 });
