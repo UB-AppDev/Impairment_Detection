@@ -19,7 +19,6 @@ export default function TabLayout() {
         tabBarLabelStyle: styles.label,
       }}
     >
-      {/* Dashboard Tab */}
       <Tabs.Screen
         name="dashboard"
         options={{
@@ -30,18 +29,6 @@ export default function TabLayout() {
         }}
       />
 
-      {/* Wallet Tab */}
-      <Tabs.Screen
-        name="temp"
-        options={{
-          title: "Wallet",
-          tabBarIcon: ({ focused }) => (
-            <Ionicons name="wallet-outline" size={24} color={focused ? activeColor : inactiveColor} />
-          ),
-        }}
-      />
-
-      {/* Statistics Tab */}
       <Tabs.Screen
         name="statistics"
         options={{
@@ -52,7 +39,6 @@ export default function TabLayout() {
         }}
       />
 
-      {/* Profile Tab */}
       <Tabs.Screen
         name="profile"
         options={{
@@ -63,7 +49,6 @@ export default function TabLayout() {
         }}
       />
 
-      {/* Stack Navigator for Accuracy & TOC */}
       <Tabs.Screen name="(stack)" options={{ headerShown: false }} />
     </Tabs>
   );
