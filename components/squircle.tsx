@@ -1,16 +1,15 @@
 import React from 'react';
-import { View, Text, StyleSheet, Image } from 'react-native';
+import { View, StyleSheet, ViewStyle } from 'react-native';
 
 interface SquircleProps {
-  imageUri: string;
-  text: string;
+  children?: React.ReactNode;
+  style?: ViewStyle;
 }
 
-export function Squircle({ imageUri, text }: SquircleProps) {
+export function Squircle({ children, style }: SquircleProps) {
   return (
-    <View style={styles.container}>
-      <Image source={{ uri: imageUri }} style={styles.image} />
-      <Text style={styles.text}>{text}</Text>
+    <View style={[styles.container, style]}>
+      {children}
     </View>
   );
 }
@@ -30,16 +29,5 @@ const styles = StyleSheet.create({
     shadowRadius: 5,
     // Android shadow
     elevation: 3,
-  },
-  image: {
-    width: 60,
-    height: 60,
-    borderRadius: 30, // Make the image circular
-    marginBottom: 8,
-    resizeMode: 'cover',
-  },
-  text: {
-    fontSize: 14,
-    textAlign: 'center',
   },
 });
