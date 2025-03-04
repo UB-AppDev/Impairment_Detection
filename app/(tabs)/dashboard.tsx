@@ -5,94 +5,76 @@ import { Text, ScrollView, StyleSheet, View, TouchableOpacity } from 'react-nati
 import { useRouter } from "expo-router";
 import { Ionicons } from "@expo/vector-icons";
 
-
 export default function ProfileScreen() {
   const router = useRouter();
 
   return (
-    <View style={styles.screenContainer}>
-      <ScrollView contentContainerStyle={styles.scrollContent}>
-        {/* Header Section */}
-        <View style={styles.header}>
-          <Ionicons name="person-circle-outline" size={50} color="black" />
-          <View>
-            <Text style={styles.headerTitle}>John Doe</Text>
-            <Text style={styles.headerSubtitle}>Doctor of Psychology</Text>
+      <View style={styles.screenContainer}>
+        <ScrollView contentContainerStyle={styles.scrollContent}>
+          <View style={styles.header}>
+            <Ionicons name="person-circle-outline" size={50} color="black" />
+            <View>
+              <Text style={styles.headerTitle}>John Doe</Text>
+              <Text style={styles.headerSubtitle}>Doctor of Psychology</Text>
+            </View>
           </View>
-        </View>
 
-        {/* Container that contains the buttons to navigate towards all out tests */}
-        <View style={styles.squircleContainer}>
+          <View style={styles.squircleContainer}>
+            <TouchableOpacity
+                style={styles.squircleItem}
+                onPress={() => router.push("/(tabs)/(stack)/accuracy")}
+            >
+              <Squircle imageUri="https://via.placeholder.com/200" text="Memory Check" />
+            </TouchableOpacity>
 
-          {/* Item Accuracy Test */}
-          <TouchableOpacity
-            style={styles.squircleItem}
-            onPress={() => router.push("/(tabs)/(stack)/accuracy")} // Redirects to Accuracy
-          >
-            <Squircle imageUri="https://via.placeholder.com/200" text="Item Accuracy" />
-          </TouchableOpacity>
+            <TouchableOpacity style={styles.squircleItem}>
+              <Squircle imageUri="https://via.placeholder.com/200" text="Stroop Naming" />
+            </TouchableOpacity>
+            <TouchableOpacity style={styles.squircleItem}>
+              <Squircle imageUri="https://via.placeholder.com/200" text="Typing Challenge" />
+            </TouchableOpacity>
 
-          <TouchableOpacity
-            style={styles.squircleItem}
-            // onPress={() => navigation.navigate('TestDetail', { testId: 2 })}
-          >
-            <Squircle imageUri="https://via.placeholder.com/200" text="Color Recognition" />
-          </TouchableOpacity>
-          <TouchableOpacity
-            style={styles.squircleItem}
-            // onPress={() => navigation.navigate('TestDetail', { testId: 3 })}
-          >
-            <Squircle imageUri="https://via.placeholder.com/200" text="Spelling Bee" />
-          </TouchableOpacity>
+            <TouchableOpacity
+                style={styles.squircleItem}
+                onPress={() => router.push("/(tabs)/(stack)/accuracy")}
+            >
+              <Squircle imageUri="https://via.placeholder.com/200" text="Walk and Turn" />
+            </TouchableOpacity>
 
-          {/* Item Accuracy Test */}
-          <TouchableOpacity
-            style={styles.squircleItem}
-            onPress={() => router.push("/(tabs)/(stack)/accuracy")} // Redirects to Accuracy
-          >
-            <Squircle imageUri="https://via.placeholder.com/200" text="Item Accuracy" />
-          </TouchableOpacity>
+            <TouchableOpacity
+                style={styles.squircleItem}
+                onPress={() => router.push("/(tabs)/(stack)/accuracy")}
+            >
+              <Squircle imageUri="https://via.placeholder.com/200" text="Choice Reaction" />
+            </TouchableOpacity>
 
-          {/* Item Accuracy Test */}
-          <TouchableOpacity
-            style={styles.squircleItem}
-            onPress={() => router.push("/(tabs)/(stack)/accuracy")} // Redirects to Accuracy
-          >
-            <Squircle imageUri="https://via.placeholder.com/200" text="Item Accuracy" />
-          </TouchableOpacity>
+            <TouchableOpacity
+                style={styles.squircleItem}
+                onPress={() => router.push("/(tabs)/(stack)/accuracy")}
+            >
+              <Squircle imageUri="https://via.placeholder.com/200" text="Tongue Twisters" />
+            </TouchableOpacity>
 
-          {/* Item Accuracy Test */}
-          <TouchableOpacity
-            style={styles.squircleItem}
-            onPress={() => router.push("/(tabs)/(stack)/accuracy")} // Redirects to Accuracy
-          >
-            <Squircle imageUri="https://via.placeholder.com/200" text="Item Accuracy" />
-          </TouchableOpacity>
+            <TouchableOpacity
+                style={styles.squircleItem}
+                onPress={() => router.push("/(tabs)/(stack)/accuracy")}
+            >
+              <Squircle imageUri="https://via.placeholder.com/200" text="Single Leg Balance" />
+            </TouchableOpacity>
 
-          {/* Item Accuracy Test */}
-          <TouchableOpacity
-            style={styles.squircleItem}
-            onPress={() => router.push("/(tabs)/(stack)/accuracy")} // Redirects to Accuracy
-          >
-            <Squircle imageUri="https://via.placeholder.com/200" text="Item Accuracy" />
-          </TouchableOpacity>
-
-          {/* Item Accuracy Test */}
-          <TouchableOpacity
-            style={styles.squircleItem}
-            onPress={() => router.push("/(tabs)/(stack)/accuracy")} // Redirects to Accuracy
-          >
-            <Squircle imageUri="https://via.placeholder.com/200" text="Item Accuracy" />
-          </TouchableOpacity>
-
-        </View>
-      </ScrollView>
-    </View>
+            <TouchableOpacity
+                style={styles.squircleItem}
+                onPress={() => router.push("/(tabs)/(stack)/accuracy")}
+            >
+              <Squircle imageUri="https://via.placeholder.com/200" text="Visual Pursuit" />
+            </TouchableOpacity>
+          </View>
+        </ScrollView>
+      </View>
   );
 }
 
 const styles = StyleSheet.create({
-  /** Header Section **/
   header: {
     flexDirection: "row",
     alignItems: "center",
