@@ -1,24 +1,16 @@
 import React from 'react';
-import { Squircle } from '@/components/squircle';
-import { ThemedText } from '@/components/ThemedText';
-import { Text, ScrollView, StyleSheet, View, TouchableOpacity } from 'react-native';
+import { View, ScrollView, StyleSheet, TouchableOpacity } from 'react-native';
 import { useRouter } from "expo-router";
-import { Ionicons } from "@expo/vector-icons";
+import { Squircle } from '@/components/squircle';
+import DashboardHeader from '@/components/DashboardHeader';
 
 export default function ProfileScreen() {
   const router = useRouter();
 
   return (
       <View style={styles.screenContainer}>
+        <DashboardHeader />
         <ScrollView contentContainerStyle={styles.scrollContent}>
-          <View style={styles.header}>
-            <Ionicons name="person-circle-outline" size={50} color="black" />
-            <View>
-              <Text style={styles.headerTitle}>John Doe</Text>
-              <Text style={styles.headerSubtitle}>Doctor of Psychology</Text>
-            </View>
-          </View>
-
           <View style={styles.squircleContainer}>
             <TouchableOpacity
                 style={styles.squircleItem}
@@ -75,31 +67,12 @@ export default function ProfileScreen() {
 }
 
 const styles = StyleSheet.create({
-  header: {
-    flexDirection: "row",
-    alignItems: "center",
-    width: "100%",
-    marginBottom: 20,
-  },
-  headerTitle: {
-    fontSize: 18,
-    fontWeight: "bold",
-    marginLeft: 10,
-  },
-  headerSubtitle: {
-    fontSize: 14,
-    color: "gray",
-    marginLeft: 10,
-  },
   screenContainer: {
     flex: 1,
     backgroundColor: '#fff',
   },
   scrollContent: {
     padding: 20,
-  },
-  darkText: {
-    color: '#000',
   },
   squircleContainer: {
     flexDirection: 'row',
