@@ -1,7 +1,6 @@
 import React from 'react';
-import { View, ScrollView, StyleSheet, TouchableOpacity } from 'react-native';
+import { View, ScrollView, StyleSheet, TouchableOpacity, Image, Text } from 'react-native';
 import { useRouter } from "expo-router";
-import { Squircle } from '@/components/squircle';
 import DashboardHeader from '@/components/DashboardHeader';
 
 export default function ProfileScreen() {
@@ -12,59 +11,34 @@ export default function ProfileScreen() {
         <DashboardHeader />
         <ScrollView contentContainerStyle={styles.scrollContent}>
           <View style={styles.squircleContainer}>
-            <TouchableOpacity
-                style={styles.squircleItem}
-                onPress={() => router.push("/(tabs)/(stack)/accuracy")}
-            >
-              <Squircle imageUri="https://via.placeholder.com/200" text="Memory Check" />
-            </TouchableOpacity>
-
-            <TouchableOpacity style={styles.squircleItem}>
-              <Squircle imageUri="https://via.placeholder.com/200" text="Stroop Naming" />
-            </TouchableOpacity>
-            <TouchableOpacity style={styles.squircleItem}>
-              <Squircle imageUri="https://via.placeholder.com/200" text="Typing Challenge" />
-            </TouchableOpacity>
-
-            <TouchableOpacity
-                style={styles.squircleItem}
-                onPress={() => router.push("/(tabs)/(stack)/accuracy")}
-            >
-              <Squircle imageUri="https://via.placeholder.com/200" text="Walk and Turn" />
-            </TouchableOpacity>
-
-            <TouchableOpacity
-                style={styles.squircleItem}
-                onPress={() => router.push("/(tabs)/(stack)/accuracy")}
-            >
-              <Squircle imageUri="https://via.placeholder.com/200" text="Choice Reaction" />
-            </TouchableOpacity>
-
-            <TouchableOpacity
-                style={styles.squircleItem}
-                onPress={() => router.push("/(tabs)/(stack)/accuracy")}
-            >
-              <Squircle imageUri="https://via.placeholder.com/200" text="Tongue Twisters" />
-            </TouchableOpacity>
-
-            <TouchableOpacity
-                style={styles.squircleItem}
-                onPress={() => router.push("/(tabs)/(stack)/accuracy")}
-            >
-              <Squircle imageUri="https://via.placeholder.com/200" text="Single Leg Balance" />
-            </TouchableOpacity>
-
-            <TouchableOpacity
-                style={styles.squircleItem}
-                onPress={() => router.push("/(tabs)/(stack)/accuracy")}
-            >
-              <Squircle imageUri="https://via.placeholder.com/200" text="Visual Pursuit" />
-            </TouchableOpacity>
+            {testItems.map((item, index) => (
+                <TouchableOpacity
+                    key={index}
+                    style={styles.squircleItem}
+                    onPress={() => router.push(item.route)}
+                >
+                  <View style={styles.squircleBox}>
+                    <Image source={item.image} style={styles.image} />
+                    <Text style={styles.text}>{item.text}</Text>
+                  </View>
+                </TouchableOpacity>
+            ))}
           </View>
         </ScrollView>
       </View>
   );
 }
+
+const testItems = [
+  { text: "Memory Check", image: require("@/assets/images/memorycheck.png"), route: "/(tabs)/(stack)/accuracy" },
+  { text: "Stroop Naming", image: require("@/assets/images/stropnaming.png"), route: "/(tabs)/(stack)/accuracy" },
+  { text: "Typing Challenge", image: require("@/assets/images/typingchallenge.png"), route: "/(tabs)/(stack)/accuracy" },
+  { text: "Walk and Turn", image: require("@/assets/images/memorycheck.png"), route: "/(tabs)/(stack)/accuracy" },
+  { text: "Choice Reaction", image: require("@/assets/images/memorycheck.png"), route: "/(tabs)/(stack)/accuracy" },
+  { text: "Tongue Twisters", image: require("@/assets/images/memorycheck.png"), route: "/(tabs)/(stack)/accuracy" },
+  { text: "Single Leg Balance", image: require("@/assets/images/memorycheck.png"), route: "/(tabs)/(stack)/accuracy" },
+  { text: "Visual Pursuit", image: require("@/assets/images/memorycheck.png"), route: "/(tabs)/(stack)/accuracy" }
+];
 
 const styles = StyleSheet.create({
   screenContainer: {
@@ -78,9 +52,38 @@ const styles = StyleSheet.create({
     flexDirection: 'row',
     flexWrap: 'wrap',
     justifyContent: 'center',
-    marginTop: 30,
+    marginTop: 10,
   },
   squircleItem: {
     margin: 10,
+    alignItems: 'center',
+  },
+  squircleBox: {
+    backgroundColor: '#fff',
+    borderRadius: 20,
+    padding: 15,
+    alignItems: 'center',
+    justifyContent: 'center',
+    shadowColor: '#000',
+    shadowOpacity: 0.1,
+    shadowRadius: 5,
+    shadowOffset: { width: 0, height: 2 },
+    elevation: 3,
+    width: 130,
+    height: 150,
+  },
+  image: {
+    width: 80,
+    height: 80,
+    resizeMode: 'contain',
+  },
+  text: {
+    fontSize: 12,
+    fontFamily: 'Poppins',
+    fontWeight: '300',
+    color: '#25D366',
+    marginTop: 5,
+    textAlign: 'center',
   },
 });
+
