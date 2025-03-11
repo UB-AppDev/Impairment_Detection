@@ -68,6 +68,13 @@ export default function TabLayout() {
                     tabBarItemStyle: { display: "none" },
                 }}
             />
+            <Tabs.Screen
+                name="(stack)/memorycheckgame"
+                options={{
+                    tabBarButton: () => null,
+                    tabBarItemStyle: { display: "none" },
+                }}
+            />
         </Tabs>
     );
 }
