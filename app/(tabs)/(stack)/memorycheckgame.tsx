@@ -1,6 +1,7 @@
 import { useState } from "react";
 import { View, Text, StyleSheet, TouchableOpacity } from "react-native";
 import { Ionicons } from "@expo/vector-icons";
+import GameHeader from "@/components/GameHeader";
 
 export default function MemoryCheckGame() {
     const [selectedItems, setSelectedItems] = useState([]);
@@ -15,13 +16,7 @@ export default function MemoryCheckGame() {
 
     return (
         <View style={styles.screenContainer}>
-            <View style={styles.header}>
-                <Ionicons name="person-circle-outline" size={50} color="black" />
-                <View>
-                    <Text style={styles.headerTitle}>Jane Doe</Text>
-                    <Text style={styles.headerSubtitle}>Client</Text>
-                </View>
-            </View>
+            <GameHeader />
 
             <View style={styles.carouselBox}>
                 <Text style={styles.carouselText}>Identify the items correctly!</Text>
@@ -68,22 +63,6 @@ const styles = StyleSheet.create({
         backgroundColor: "#fff",
         alignItems: "center",
         padding: 20,
-    },
-    header: {
-        flexDirection: "row",
-        alignItems: "center",
-        width: "100%",
-        marginBottom: 20,
-    },
-    headerTitle: {
-        fontSize: 18,
-        fontWeight: "bold",
-        marginLeft: 10,
-    },
-    headerSubtitle: {
-        fontSize: 14,
-        color: "gray",
-        marginLeft: 10,
     },
     carouselBox: {
         backgroundColor: "#28C76F",
@@ -152,3 +131,4 @@ const styles = StyleSheet.create({
         fontSize: 12,
     },
 });
+
