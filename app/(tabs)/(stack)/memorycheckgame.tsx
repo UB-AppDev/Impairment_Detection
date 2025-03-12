@@ -3,6 +3,7 @@ import { View, Text, StyleSheet, TouchableOpacity } from "react-native";
 import { FontAwesome5 } from "@expo/vector-icons";
 import GameHeader from "@/components/GameHeader";
 import { randomizeIcons } from "@/logic/Randomizer";
+import ProgressTracker from "@/components/ProgressTracker";
 
 export default function MemoryCheckGame() {
     const [selectedItems, setSelectedItems] = useState([]);
@@ -50,17 +51,7 @@ export default function MemoryCheckGame() {
                 </TouchableOpacity>
             </View>
 
-            <View style={styles.progressContainer}>
-                {["1", "2", "3", "4"].map((num) => (
-                    <View key={num} style={styles.progressItem}>
-                        <Text style={styles.progressText}>{num}</Text>
-                        <Text style={styles.progressLabel}>Question {num}</Text>
-                        <View style={styles.progressStatus}>
-                            <Text style={styles.statusText}>In Progress</Text>
-                        </View>
-                    </View>
-                ))}
-            </View>
+            <ProgressTracker />
         </View>
     );
 }
@@ -115,36 +106,5 @@ const styles = StyleSheet.create({
         color: "#28C76F",
         fontSize: 16,
         fontWeight: "bold",
-    },
-    progressContainer: {
-        flexDirection: "row",
-        justifyContent: "space-evenly",
-        width: "100%",
-        marginTop: 20,
-    },
-    progressItem: {
-        alignItems: "center",
-        width: 80,
-    },
-    progressText: {
-        fontSize: 18,
-        fontWeight: "bold",
-    },
-    progressLabel: {
-        fontSize: 12,
-        color: "gray",
-        textAlign: "center",
-    },
-    progressStatus: {
-        backgroundColor: "#2C6BED",
-        paddingHorizontal: 8,
-        paddingVertical: 4,
-        borderRadius: 10,
-        marginTop: 5,
-    },
-    statusText: {
-        color: "white",
-        fontSize: 10,
-        textAlign: "center",
     },
 });
