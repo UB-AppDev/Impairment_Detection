@@ -21,21 +21,26 @@ export default function MemoryCheckGame() {
             <View style={styles.carouselBox}>
                 <Text style={styles.carouselText}>Identify the items correctly!</Text>
                 <View style={styles.iconGrid}>
-                    {["horse", "bug", "horse", "horse", "horse", "boat", "horse", "horse", "horse"].map(
-                        (icon, index) => (
-                            <TouchableOpacity
-                                key={index}
-                                onPress={() => toggleSelection(index)}
-                            >
-                                <Ionicons
-                                    name={`${icon}-outline`}
-                                    size={50}
-                                    color={selectedItems.includes(index) ? "white" : "black"}
-                                    style={styles.icon}
-                                />
-                            </TouchableOpacity>
-                        )
-                    )}
+                    {[
+                        ["horse", "bug", "horse"],
+                        ["horse", "horse", "boat"],
+                        ["horse", "horse", "horse"],
+                    ].map((row, rowIndex) => (
+                        <View key={rowIndex} style={styles.row}>
+                            {row.map((icon, colIndex) => {
+                                const index = rowIndex * 3 + colIndex;
+                                return (
+                                    <TouchableOpacity key={index} onPress={() => toggleSelection(index)} style={styles.iconWrapper}>
+                                        <Ionicons
+                                            name={`${icon}-outline`}
+                                            size={50}
+                                            color={selectedItems.includes(index) ? "white" : "black"}
+                                        />
+                                    </TouchableOpacity>
+                                );
+                            })}
+                        </View>
+                    ))}
                 </View>
                 <TouchableOpacity style={styles.submitButton}>
                     <Text style={styles.submitButtonText}>Submit</Text>
@@ -81,13 +86,19 @@ const styles = StyleSheet.create({
         marginBottom: 20,
     },
     iconGrid: {
-        flexDirection: "row",
-        flexWrap: "wrap",
-        justifyContent: "center",
-        gap: 10,
+        alignItems: "center",
     },
-    icon: {
-        margin: 5,
+    row: {
+        flexDirection: "row",
+        justifyContent: "center",
+        alignItems: "center",
+        marginBottom: 10,
+    },
+    iconWrapper: {
+        width: 70,
+        height: 70,
+        justifyContent: "center",
+        alignItems: "center",
     },
     submitButton: {
         backgroundColor: "#fff",
@@ -104,12 +115,13 @@ const styles = StyleSheet.create({
     },
     progressContainer: {
         flexDirection: "row",
-        justifyContent: "space-around",
+        justifyContent: "space-evenly",
         width: "100%",
         marginTop: 20,
     },
     progressItem: {
         alignItems: "center",
+        width: 80,
     },
     progressText: {
         fontSize: 18,
@@ -118,17 +130,18 @@ const styles = StyleSheet.create({
     progressLabel: {
         fontSize: 12,
         color: "gray",
+        textAlign: "center",
     },
     progressStatus: {
         backgroundColor: "#2C6BED",
-        paddingHorizontal: 10,
-        paddingVertical: 5,
+        paddingHorizontal: 8,
+        paddingVertical: 4,
         borderRadius: 10,
         marginTop: 5,
     },
     statusText: {
         color: "white",
-        fontSize: 12,
+        fontSize: 10,
+        textAlign: "center",
     },
 });
-
