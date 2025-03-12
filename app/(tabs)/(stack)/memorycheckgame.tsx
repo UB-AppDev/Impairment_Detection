@@ -1,34 +1,77 @@
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { View, Text, StyleSheet, TouchableOpacity } from "react-native";
 import { FontAwesome5 } from "@expo/vector-icons";
 import { useLocalSearchParams } from "expo-router";
 import GameHeader from "@/components/GameHeader";
-import { randomizeIcons } from "@/logic/Randomizer";
+import { randomizeIcons, selectCorrectIcons } from "@/logic/Randomizer";
 import ProgressTracker from "@/components/ProgressTracker";
 
 export default function MemoryCheckGame() {
-    const { correctIcons } = useLocalSearchParams();
+    const { correctIcons: passedCorrectIcons } = useLocalSearchParams();
     const [selectedItems, setSelectedItems] = useState([]);
     const [iconsGrid, setIconsGrid] = useState(randomizeIcons());
+    const [correctIcons, setCorrectIcons] = useState([]);
     const [currentStep, setCurrentStep] = useState(0);
-    const [correctSelections, setCorrectSelections] = useState([]);
+    const [progressStatus, setProgressStatus] = useState(["inProgress", "inProgress", "inProgress", "inProgress"]);
+    const [incorrectSelections, setIncorrectSelections] = useState([]);
+    const [showFeedback, setShowFeedback] = useState(false);
+    const [buttonText, setButtonText] = useState("Submit");
+
+    useEffect(() => {
+        setCorrectIcons(selectCorrectIcons(iconsGrid));
+    }, [iconsGrid]);
 
     const toggleSelection = (icon, index) => {
-        setSelectedItems((prev) =>
-            prev.includes(index)
-                ? prev.filter((i) => i !== index)
-                : [...prev, index]
-        );
-
-        if (correctIcons.includes(icon) && !correctSelections.includes(icon)) {
-            setCorrectSelections((prev) => [...prev, icon]);
+        if (!showFeedback) {
+            setSelectedItems((prev) =>
+                prev.includes(index) ? prev.filter((i) => i !== index) : [...prev, index]
+            );
         }
     };
 
-    const handleSubmit = () => {
+    const resetGame = () => {
         setIconsGrid(randomizeIcons());
         setSelectedItems([]);
-        setCurrentStep((prev) => (prev < 4 ? prev + 1 : prev));
+        setIncorrectSelections([]);
+        setShowFeedback(false);
+        setButtonText("Submit");
+        setCorrectIcons(selectCorrectIcons(iconsGrid));
+    };
+
+    const handleSubmit = () => {
+        if (buttonText === "Proceed") {
+            setProgressStatus((prev) =>
+                prev.map((status, index) => (index === currentStep ? "failed" : status))
+            );
+            resetGame();
+            return;
+        }
+
+        const selectedIcons = selectedItems.map((index) => {
+            const row = Math.floor(index / 3);
+            const col = index % 3;
+            return iconsGrid[row][col];
+        });
+
+        const allCorrect =
+            correctIcons.length &&
+            selectedIcons.length === correctIcons.length &&
+            correctIcons.every((icon) => selectedIcons.includes(icon));
+
+        if (allCorrect) {
+            setProgressStatus((prev) =>
+                prev.map((status, index) => (index === currentStep ? "completed" : status))
+            );
+            setCurrentStep((prev) => (prev < 4 ? prev + 1 : prev));
+            resetGame();
+        } else {
+            setProgressStatus((prev) =>
+                prev.map((status, index) => (index === currentStep ? "failed" : status))
+            );
+            setIncorrectSelections(selectedIcons.filter((icon) => !correctIcons.includes(icon)));
+            setShowFeedback(true);
+            setButtonText("Proceed");
+        }
     };
 
     return (
@@ -48,13 +91,20 @@ export default function MemoryCheckGame() {
                                         onPress={() => toggleSelection(icon, index)}
                                         style={[
                                             styles.iconWrapper,
-                                            correctSelections.includes(icon) && styles.correctSelection,
+                                            showFeedback && correctIcons.includes(icon) && styles.correctSelection,
+                                            showFeedback && incorrectSelections.includes(icon) && styles.incorrectSelection,
                                         ]}
                                     >
                                         <FontAwesome5
                                             name={icon}
                                             size={50}
-                                            color={selectedItems.includes(index) ? "white" : "black"}
+                                            color={
+                                                showFeedback && incorrectSelections.includes(icon)
+                                                    ? "white"
+                                                    : selectedItems.includes(index)
+                                                        ? "white"
+                                                        : "black"
+                                            }
                                         />
                                     </TouchableOpacity>
                                 );
@@ -63,11 +113,11 @@ export default function MemoryCheckGame() {
                     ))}
                 </View>
                 <TouchableOpacity style={styles.submitButton} onPress={handleSubmit}>
-                    <Text style={styles.submitButtonText}>Submit</Text>
+                    <Text style={styles.submitButtonText}>{buttonText}</Text>
                 </TouchableOpacity>
             </View>
 
-            <ProgressTracker currentStep={currentStep} />
+            <ProgressTracker progressStatus={progressStatus} />
         </View>
     );
 }
@@ -112,6 +162,10 @@ const styles = StyleSheet.create({
     },
     correctSelection: {
         backgroundColor: "#25D366",
+        borderRadius: 10,
+    },
+    incorrectSelection: {
+        backgroundColor: "#E74C3C",
         borderRadius: 10,
     },
     submitButton: {

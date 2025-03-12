@@ -1,6 +1,6 @@
 import { View, Text, StyleSheet } from "react-native";
 
-const ProgressTracker = ({ currentStep }) => {
+const ProgressTracker = ({ progressStatus }) => {
     return (
         <View style={styles.progressContainer}>
             {["1", "2", "3", "4"].map((num, index) => (
@@ -10,11 +10,19 @@ const ProgressTracker = ({ currentStep }) => {
                     <View
                         style={[
                             styles.progressStatus,
-                            index < currentStep ? styles.completedStatus : styles.inProgressStatus,
+                            progressStatus[index] === "completed"
+                                ? styles.completedStatus
+                                : progressStatus[index] === "failed"
+                                    ? styles.failedStatus
+                                    : styles.inProgressStatus,
                         ]}
                     >
                         <Text style={styles.statusText}>
-                            {index < currentStep ? "Completed" : "In Progress"}
+                            {progressStatus[index] === "completed"
+                                ? "Completed"
+                                : progressStatus[index] === "failed"
+                                    ? "Failed"
+                                    : "In Progress"}
                         </Text>
                     </View>
                 </View>
@@ -58,6 +66,9 @@ const styles = StyleSheet.create({
     },
     completedStatus: {
         backgroundColor: "#28C76F",
+    },
+    failedStatus: {
+        backgroundColor: "#E74C3C",
     },
     statusText: {
         color: "white",
