@@ -16,3 +16,7 @@ export const randomizeIcons = () => {
         shuffledIcons.slice(6, 9)
     ];
 };
+
+export const selectCorrectIcons = (iconsGrid) => {
+    return [iconsGrid[0][0], iconsGrid[1][1]];
+};

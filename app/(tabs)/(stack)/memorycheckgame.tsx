@@ -1,21 +1,28 @@
 import { useState } from "react";
 import { View, Text, StyleSheet, TouchableOpacity } from "react-native";
 import { FontAwesome5 } from "@expo/vector-icons";
+import { useLocalSearchParams } from "expo-router";
 import GameHeader from "@/components/GameHeader";
 import { randomizeIcons } from "@/logic/Randomizer";
 import ProgressTracker from "@/components/ProgressTracker";
 
 export default function MemoryCheckGame() {
+    const { correctIcons } = useLocalSearchParams();
     const [selectedItems, setSelectedItems] = useState([]);
     const [iconsGrid, setIconsGrid] = useState(randomizeIcons());
     const [currentStep, setCurrentStep] = useState(0);
+    const [correctSelections, setCorrectSelections] = useState([]);
 
-    const toggleSelection = (item) => {
+    const toggleSelection = (icon, index) => {
         setSelectedItems((prev) =>
-            prev.includes(item)
-                ? prev.filter((i) => i !== item)
-                : [...prev, item]
+            prev.includes(index)
+                ? prev.filter((i) => i !== index)
+                : [...prev, index]
         );
+
+        if (correctIcons.includes(icon) && !correctSelections.includes(icon)) {
+            setCorrectSelections((prev) => [...prev, icon]);
+        }
     };
 
     const handleSubmit = () => {
@@ -36,7 +43,14 @@ export default function MemoryCheckGame() {
                             {row.map((icon, colIndex) => {
                                 const index = rowIndex * 3 + colIndex;
                                 return (
-                                    <TouchableOpacity key={index} onPress={() => toggleSelection(index)} style={styles.iconWrapper}>
+                                    <TouchableOpacity
+                                        key={index}
+                                        onPress={() => toggleSelection(icon, index)}
+                                        style={[
+                                            styles.iconWrapper,
+                                            correctSelections.includes(icon) && styles.correctSelection,
+                                        ]}
+                                    >
                                         <FontAwesome5
                                             name={icon}
                                             size={50}
@@ -95,6 +109,10 @@ const styles = StyleSheet.create({
         height: 70,
         justifyContent: "center",
         alignItems: "center",
+    },
+    correctSelection: {
+        backgroundColor: "#25D366",
+        borderRadius: 10,
     },
     submitButton: {
         backgroundColor: "#fff",
