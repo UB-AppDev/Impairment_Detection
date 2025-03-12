@@ -1,161 +1,90 @@
 import React from 'react';
-import { Text, ScrollView, StyleSheet, View, TouchableOpacity } from 'react-native';
+import { View, ScrollView, StyleSheet, TouchableOpacity, Image, Text } from 'react-native';
 import { useRouter } from "expo-router";
-import { Ionicons } from "@expo/vector-icons";
-import { Squircle } from '@/components/squircle';
+import DashboardHeader from '@/components/DashboardHeader';
 
 export default function ProfileScreen() {
   const router = useRouter();
 
   return (
-    <View style={styles.screenContainer}>
-      <ScrollView contentContainerStyle={styles.scrollContent}>
-        {/* Header Section: Displays the user icon and profile details */}
-        <View style={styles.header}>
-          <Ionicons name="person-circle-outline" size={50} color="black" />
-          <View style={styles.headerTextContainer}>
-            <Text style={styles.headerTitle}>John Doe</Text>
-            <Text style={styles.headerSubtitle}>Doctor of Psychology</Text>
+      <View style={styles.screenContainer}>
+        <DashboardHeader />
+        <ScrollView contentContainerStyle={styles.scrollContent}>
+          <View style={styles.squircleContainer}>
+            {testItems.map((item, index) => (
+                <TouchableOpacity
+                    key={index}
+                    style={styles.squircleItem}
+                    onPress={() => router.push(item.route)}
+                >
+                  <View style={styles.squircleBox}>
+                    <Image source={item.image} style={styles.image} />
+                    <Text style={styles.text}>{item.text}</Text>
+                  </View>
+                </TouchableOpacity>
+            ))}
           </View>
-        </View>
-
-        {/* Game Options Section: Each game is rendered as a Squircle container with a relevant icon */}
-        <View style={styles.squircleContainer}>
-          {/* Short Term Memory Game */}
-          <TouchableOpacity
-            style={styles.squircleItem}
-            onPress={() => router.push("/(tabs)/(stack)/accuracy")}
-          >
-            <Squircle>
-              <Ionicons name="brain-outline" size={32} color="black" />
-              <Text style={styles.squircleText}>Short Term Memory Game</Text>
-            </Squircle>
-          </TouchableOpacity>
-
-          {/* Choice Reaction Gamee */}
-          <TouchableOpacity
-            style={styles.squircleItem}
-            onPress={() => router.push("/(tabs)/(stack)/stroopGame")}
-          >
-            <Squircle>
-              <Ionicons name="map" size={32} color="black" />
-              <Text style={styles.squircleText}>Choice Reaction Game</Text>
-            </Squircle>
-          </TouchableOpacity>
-
-          {/* Stroop Game */}
-          <TouchableOpacity
-            style={styles.squircleItem}
-            onPress={() => router.push("/(tabs)/(stack)/stroopGame")}
-          >
-            <Squircle>
-              <Ionicons name="color-palette-outline" size={32} color="black" />
-              <Text style={styles.squircleText}>Stroop Game</Text>
-            </Squircle>
-          </TouchableOpacity>
-
-          {/* Tongue Twister Game */}
-          <TouchableOpacity
-            style={styles.squircleItem}
-            onPress={() => router.push("/(tabs)/(stack)/tongueTwister")}
-          >
-            <Squircle>
-              <Ionicons name="megaphone-outline" size={32} color="black" />
-              <Text style={styles.squircleText}>Tongue Twister Game</Text>
-            </Squircle>
-          </TouchableOpacity>
-
-          {/* Typing Game */}
-          <TouchableOpacity
-            style={styles.squircleItem}
-            onPress={() => router.push("/(tabs)/(stack)/typingGame")}
-          >
-            <Squircle>
-              <Ionicons name="keyboard-outline" size={32} color="black" />
-              <Text style={styles.squircleText}>Typing Game</Text>
-            </Squircle>
-          </TouchableOpacity>
-
-          {/* Single Leg Balance */}
-          <TouchableOpacity
-            style={styles.squircleItem}
-            onPress={() => router.push("/(tabs)/(stack)/singleLegBalance")}
-          >
-            <Squircle>
-              <Ionicons name="walk-outline" size={32} color="black" />
-              <Text style={styles.squircleText}>Single Leg Balance</Text>
-            </Squircle>
-          </TouchableOpacity>
-
-          {/* Walk and Turn Game */}
-          <TouchableOpacity
-            style={styles.squircleItem}
-            onPress={() => router.push("/(tabs)/(stack)/walkAndTurn")}
-          >
-            <Squircle>
-              <Ionicons name="compass-outline" size={32} color="black" />
-              <Text style={styles.squircleText}>Walk and Turn Game</Text>
-            </Squircle>
-          </TouchableOpacity>
-
-          {/* Eye Tracking Game */}
-          <TouchableOpacity
-            style={styles.squircleItem}
-            onPress={() => router.push("/(tabs)/(stack)/eyeTracking")}
-          >
-            <Squircle>
-              <Ionicons name="eye-outline" size={32} color="black" />
-              <Text style={styles.squircleText}>Eye Tracking Game</Text>
-            </Squircle>
-          </TouchableOpacity>
-        </View>
-      </ScrollView>
-    </View>
+        </ScrollView>
+      </View>
   );
 }
 
+const testItems = [
+  { text: "Memory Check", image: require("@/assets/images/memorycheck.png"), route: "/(tabs)/(stack)/accuracy" },
+  { text: "Stroop Naming", image: require("@/assets/images/stropnaming.png"), route: "/(tabs)/(stack)/accuracy" },
+  { text: "Typing Challenge", image: require("@/assets/images/typingchallenge.png"), route: "/(tabs)/(stack)/accuracy" },
+  { text: "Walk and Turn", image: require("@/assets/images/memorycheck.png"), route: "/(tabs)/(stack)/accuracy" },
+  { text: "Choice Reaction", image: require("@/assets/images/memorycheck.png"), route: "/(tabs)/(stack)/accuracy" },
+  { text: "Tongue Twisters", image: require("@/assets/images/memorycheck.png"), route: "/(tabs)/(stack)/accuracy" },
+  { text: "Single Leg Balance", image: require("@/assets/images/memorycheck.png"), route: "/(tabs)/(stack)/accuracy" },
+  { text: "Visual Pursuit", image: require("@/assets/images/memorycheck.png"), route: "/(tabs)/(stack)/accuracy" }
+];
+
 const styles = StyleSheet.create({
-  // Overall screen container styling
   screenContainer: {
     flex: 1,
     backgroundColor: '#fff',
   },
-  // Styling for the scrollable content container
   scrollContent: {
     padding: 20,
   },
-  // Header section styling (profile image and text)
-  header: {
-    flexDirection: "row",
-    alignItems: "center",
-    marginBottom: 20,
-  },
-  headerTextContainer: {
-    marginLeft: 10,
-  },
-  headerTitle: {
-    fontSize: 18,
-    fontWeight: "bold",
-  },
-  headerSubtitle: {
-    fontSize: 14,
-    color: "gray",
-  },
-  // Container for all Squircle game options
   squircleContainer: {
     flexDirection: 'row',
     flexWrap: 'wrap',
     justifyContent: 'center',
-    marginTop: 30,
+    marginTop: 10,
   },
   // Each Squircle item styling (margin between items)
   squircleItem: {
     margin: 10,
+    alignItems: 'center',
   },
-  // Text styling within each Squircle container
-  squircleText: {
-    fontSize: 14,
+  squircleBox: {
+    backgroundColor: '#fff',
+    borderRadius: 20,
+    padding: 15,
+    alignItems: 'center',
+    justifyContent: 'center',
+    shadowColor: '#000',
+    shadowOpacity: 0.1,
+    shadowRadius: 5,
+    shadowOffset: { width: 0, height: 2 },
+    elevation: 3,
+    width: 130,
+    height: 150,
+  },
+  image: {
+    width: 80,
+    height: 80,
+    resizeMode: 'contain',
+  },
+  text: {
+    fontSize: 12,
+    fontFamily: 'Poppins',
+    fontWeight: '300',
+    color: '#25D366',
+    marginTop: 5,
     textAlign: 'center',
-    marginTop: 8,
   },
 });
+

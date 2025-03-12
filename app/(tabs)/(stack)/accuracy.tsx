@@ -7,73 +7,63 @@ export default function AccuracyScreen() {
   const router = useRouter();
 
   return (
-    <View style={styles.screenContainer}>
-      {/* Header Section */}
-      <View style={styles.header}>
-        <Ionicons name="person-circle-outline" size={50} color="black" />
-        <View>
-          <Text style={styles.headerTitle}>John Doe</Text>
-          <Text style={styles.headerSubtitle}>Doctor of Psychology</Text>
-        </View>
-      </View>
-
-      {/* Green Carousel Box */}
-      <View style={styles.carouselBox}>
-        <View style={styles.iconContainer}>
-          <Ionicons name="bug-outline" size={40} color="black" />
-          <Ionicons name="boat-outline" size={40} color="black" />
-        </View>
-        <Text style={styles.carouselText}>
-          The player will be given a set of shapes to recognize
-        </Text>
-        <View style={styles.paginationDots}>
-          <View style={styles.dot} />
-          <View style={[styles.dot, styles.activeDot]} />
-          <View style={styles.dot} />
-        </View>
-      </View>
-
-      {/* Info Box */}
-      <View style={styles.infoBox}>
-        <Text style={styles.sectionTitle}>Item Accuracy</Text>
-        <Text style={styles.description}>
-          Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do
-          eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad
-          minim veniam, quis nostrud exercitation.
-        </Text>
-
-        {/* Duration */}
-        <Text style={styles.subtitle}>Duration</Text>
-        <Text style={styles.highlightText}>5-10 minutes</Text>
-
-        {/* Patient Section */}
-        <View style={styles.personRow}>
-          <Ionicons name="person-circle-outline" size={40} color="black" />
-          <View style={styles.personInfo}>
-            <Text style={styles.personName}>Jane Doe</Text>
-            <Text style={styles.personRole}>Patient</Text>
-          </View>
-          <Text style={styles.editText}>Edit</Text>
-        </View>
-
-        {/* Admin Section */}
-        <View style={styles.personRow}>
-          <Ionicons name="person-circle-outline" size={40} color="black" />
-          <View style={styles.personInfo}>
-            <Text style={styles.personName}>John Doe</Text>
-            <Text style={styles.personRole}>Doctor of Psychology</Text>
+      <View style={styles.screenContainer}>
+        <View style={styles.header}>
+          <Ionicons name="person-circle-outline" size={50} color="black" />
+          <View>
+            <Text style={styles.headerTitle}>John Doe</Text>
+            <Text style={styles.headerSubtitle}>Doctor of Psychology</Text>
           </View>
         </View>
-      </View>
 
-      {/* Start Test Button */}
-      <TouchableOpacity
-        style={styles.startButton}
-        onPress={() => router.push("/(tabs)/(stack)/TOC")}
-      >
-        <Text style={styles.startButtonText}>Start Test</Text>
-      </TouchableOpacity>
-    </View>
+        <View style={styles.carouselBox}>
+          <View style={styles.iconContainer}>
+            <Ionicons name="bug-outline" size={40} color="black" />
+            <Ionicons name="boat-outline" size={40} color="black" />
+          </View>
+          <Text style={styles.carouselText}>
+            The player will be given a set of shapes to recognize
+          </Text>
+          <View style={styles.paginationDots}>
+            <View style={styles.dot} />
+            <View style={[styles.dot, styles.activeDot]} />
+            <View style={styles.dot} />
+          </View>
+        </View>
+
+        <View style={styles.infoBox}>
+          <Text style={styles.sectionTitle}>Item Accuracy</Text>
+          <Text style={styles.description}>
+            Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do
+            eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad
+            minim veniam, quis nostrud exercitation.
+          </Text>
+          <Text style={styles.subtitle}>Duration</Text>
+          <Text style={styles.highlightText}>5-10 minutes</Text>
+          <View style={styles.personRow}>
+            <Ionicons name="person-circle-outline" size={40} color="black" />
+            <View style={styles.personInfo}>
+              <Text style={styles.personName}>Jane Doe</Text>
+              <Text style={styles.personRole}>Patient</Text>
+            </View>
+            <Text style={styles.editText}>Edit</Text>
+          </View>
+          <View style={styles.personRow}>
+            <Ionicons name="person-circle-outline" size={40} color="black" />
+            <View style={styles.personInfo}>
+              <Text style={styles.personName}>John Doe</Text>
+              <Text style={styles.personRole}>Doctor of Psychology</Text>
+            </View>
+          </View>
+        </View>
+
+        <TouchableOpacity
+            style={styles.startButton}
+            onPress={() => router.push("/(tabs)/(stack)/TOC")}
+        >
+          <Text style={styles.startButtonText}>Start Test</Text>
+        </TouchableOpacity>
+      </View>
   );
 }
 
@@ -84,8 +74,6 @@ const styles = StyleSheet.create({
     alignItems: "center",
     padding: 20,
   },
-
-  /** Header Section **/
   header: {
     flexDirection: "row",
     alignItems: "center",
@@ -102,8 +90,6 @@ const styles = StyleSheet.create({
     color: "gray",
     marginLeft: 10,
   },
-
-  /** Carousel Box **/
   carouselBox: {
     backgroundColor: "#28C76F",
     width: "100%",
@@ -137,8 +123,6 @@ const styles = StyleSheet.create({
   activeDot: {
     opacity: 1,
   },
-
-  /** Info Box **/
   infoBox: {
     backgroundColor: "#F8F8F8",
     width: "100%",
@@ -166,8 +150,6 @@ const styles = StyleSheet.create({
     color: "#28C76F",
     marginBottom: 10,
   },
-
-  /** Person Row **/
   personRow: {
     flexDirection: "row",
     alignItems: "center",
@@ -189,8 +171,6 @@ const styles = StyleSheet.create({
     color: "#28C76F",
     fontWeight: "bold",
   },
-
-  /** Start Button **/
   startButton: {
     backgroundColor: "#28C76F",
     width: "100%",
@@ -204,3 +184,4 @@ const styles = StyleSheet.create({
     fontWeight: "bold",
   },
 });
+

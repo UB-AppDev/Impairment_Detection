@@ -5,31 +5,27 @@ export default function IndexScreen() {
   const router = useRouter();
 
   return (
-    <View style={styles.container}>
-      {/* Illustration */}
-      <Image
-        source={{ uri: 'https://via.placeholder.com/300x200' }} // Replace with your actual image
-        style={styles.image}
-      />
+      <View style={styles.container}>
+        <Image
+            source={{ uri: 'https://via.placeholder.com/300x200' }}
+            style={styles.image}
+        />
 
-      {/* Pagination Dots */}
-      <View style={styles.pagination}>
-        <View style={[styles.dot, styles.activeDot]} />
-        <View style={styles.dot} />
-        <View style={styles.dot} />
+        <View style={styles.pagination}>
+          <View style={[styles.dot, styles.activeDot]} />
+          <View style={styles.dot} />
+          <View style={styles.dot} />
+        </View>
+
+        <Text style={styles.title}>All-In One Sobriety App!</Text>
+
+        <TouchableOpacity
+            style={styles.button}
+            onPress={() => router.replace('/(tabs)/dashboard')}
+        >
+          <Text style={styles.buttonText}>Begin</Text>
+        </TouchableOpacity>
       </View>
-
-      {/* Title */}
-      <Text style={styles.title}>All-In One Sobriety App!</Text>
-
-      {/* Green Button */}
-      <TouchableOpacity
-        style={styles.button}
-        onPress={() => router.replace('/(tabs)/dashboard')} // Redirects to Dashboard
-      >
-        <Text style={styles.buttonText}>Begin</Text>
-      </TouchableOpacity>
-    </View>
   );
 }
 
@@ -59,17 +55,17 @@ const styles = StyleSheet.create({
     marginHorizontal: 4,
   },
   activeDot: {
-    backgroundColor: '#28C76F', // Green color for active dot
+    backgroundColor: '#25D366',
   },
   title: {
     fontSize: 18,
     fontWeight: 'bold',
-    color: '#28C76F',
+    color: '#25D366',
     textAlign: 'center',
     marginBottom: 20,
   },
   button: {
-    backgroundColor: '#28C76F',
+    backgroundColor: '#25D366',
     paddingVertical: 15,
     paddingHorizontal: 40,
     borderRadius: 25,

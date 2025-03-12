@@ -17,17 +17,26 @@ export function Squircle({ children, style }: SquircleProps) {
 const styles = StyleSheet.create({
   container: {
     backgroundColor: '#fff',
-    borderRadius: 20, // Adjust to achieve the "squircle" look
+    borderRadius: 20,
     width: 120,
     height: 120,
     marginHorizontal: 10,
     alignItems: 'center',
     justifyContent: 'center',
-    // iOS shadow
     shadowColor: '#000',
     shadowOpacity: 0.1,
     shadowRadius: 5,
-    // Android shadow
     elevation: 3,
+  },
+  image: {
+    width: 60,
+    height: 60,
+    borderRadius: 30,
+    marginBottom: 8,
+    resizeMode: 'cover',
+  },
+  text: {
+    fontSize: 14,
+    textAlign: 'center',
   },
 });
