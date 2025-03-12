@@ -1,4 +1,3 @@
-// MemoryCheckGame.js
 import { useState } from "react";
 import { View, Text, StyleSheet, TouchableOpacity } from "react-native";
 import { FontAwesome5 } from "@expo/vector-icons";
@@ -78,6 +77,7 @@ const styles = StyleSheet.create({
     carouselText: {
         color: "white",
         fontSize: 18,
+        fontWeight: "bold",
         textAlign: "center",
         marginBottom: 20,
     },
@@ -99,7 +99,7 @@ const styles = StyleSheet.create({
     submitButton: {
         backgroundColor: "#fff",
         width: "80%",
-        paddingVertical: 13,
+        paddingVertical: 15,
         borderRadius: 30,
         alignItems: "center",
         marginTop: 20,
@@ -107,5 +107,6 @@ const styles = StyleSheet.create({
     submitButtonText: {
         color: "#28C76F",
         fontSize: 16,
+        fontWeight: "bold",
     },
 });
