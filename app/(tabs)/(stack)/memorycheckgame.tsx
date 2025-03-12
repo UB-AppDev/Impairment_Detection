@@ -1,10 +1,12 @@
 import { useState } from "react";
 import { View, Text, StyleSheet, TouchableOpacity } from "react-native";
-import { Ionicons } from "@expo/vector-icons";
+import { FontAwesome5 } from "@expo/vector-icons";
 import GameHeader from "@/components/GameHeader";
+import { randomizeIcons } from "@/logic/Randomizer";
 
 export default function MemoryCheckGame() {
     const [selectedItems, setSelectedItems] = useState([]);
+    const [iconsGrid, setIconsGrid] = useState(randomizeIcons());
 
     const toggleSelection = (item) => {
         setSelectedItems((prev) =>
@@ -14,6 +16,11 @@ export default function MemoryCheckGame() {
         );
     };
 
+    const handleSubmit = () => {
+        setIconsGrid(randomizeIcons());
+        setSelectedItems([]);
+    };
+
     return (
         <View style={styles.screenContainer}>
             <GameHeader />
@@ -21,18 +28,14 @@ export default function MemoryCheckGame() {
             <View style={styles.carouselBox}>
                 <Text style={styles.carouselText}>Identify the items correctly!</Text>
                 <View style={styles.iconGrid}>
-                    {[
-                        ["horse", "bug", "horse"],
-                        ["horse", "horse", "boat"],
-                        ["horse", "horse", "horse"],
-                    ].map((row, rowIndex) => (
+                    {iconsGrid.map((row, rowIndex) => (
                         <View key={rowIndex} style={styles.row}>
                             {row.map((icon, colIndex) => {
                                 const index = rowIndex * 3 + colIndex;
                                 return (
                                     <TouchableOpacity key={index} onPress={() => toggleSelection(index)} style={styles.iconWrapper}>
-                                        <Ionicons
-                                            name={`${icon}-outline`}
+                                        <FontAwesome5
+                                            name={icon}
                                             size={50}
                                             color={selectedItems.includes(index) ? "white" : "black"}
                                         />
@@ -42,7 +45,7 @@ export default function MemoryCheckGame() {
                         </View>
                     ))}
                 </View>
-                <TouchableOpacity style={styles.submitButton}>
+                <TouchableOpacity style={styles.submitButton} onPress={handleSubmit}>
                     <Text style={styles.submitButtonText}>Submit</Text>
                 </TouchableOpacity>
             </View>
