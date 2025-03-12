@@ -55,17 +55,17 @@ const styles = StyleSheet.create({
     marginHorizontal: 4,
   },
   activeDot: {
-    backgroundColor: '#28C76F',
+    backgroundColor: '#25D366',
   },
   title: {
     fontSize: 18,
     fontWeight: 'bold',
-    color: '#28C76F',
+    color: '#25D366',
     textAlign: 'center',
     marginBottom: 20,
   },
   button: {
-    backgroundColor: '#28C76F',
+    backgroundColor: '#25D366',
     paddingVertical: 15,
     paddingHorizontal: 40,
     borderRadius: 25,

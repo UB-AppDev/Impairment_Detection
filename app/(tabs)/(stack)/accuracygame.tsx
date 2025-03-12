@@ -7,34 +7,31 @@ export default function AccuracyScreen() {
   const router = useRouter();
 
   return (
-    <View style={styles.screenContainer}>
-      {/* Header Section */}
-      <View style={styles.header}>
-        <Ionicons name="person-circle-outline" size={50} color="black" />
-        <View>
-          <Text style={styles.headerTitle}>Jane Doe</Text>
-          <Text style={styles.headerSubtitle}>patient</Text>
+      <View style={styles.screenContainer}>
+        <View style={styles.header}>
+          <Ionicons name="person-circle-outline" size={50} color="black" />
+          <View>
+            <Text style={styles.headerTitle}>Jane Doe</Text>
+            <Text style={styles.headerSubtitle}>patient</Text>
+          </View>
         </View>
-      </View>
 
-      {/* Green Carousel Box */}
-      <View style={styles.carouselBox}>
-        <View style={styles.iconContainer}>
-          <Ionicons name="bug-outline" size={40} color="white" />
-          <Ionicons name="boat-outline" size={40} color="white" />
+        <View style={styles.carouselBox}>
+          <View style={styles.iconContainer}>
+            <Ionicons name="bug-outline" size={40} color="white" />
+            <Ionicons name="boat-outline" size={40} color="white" />
+          </View>
+          <Text style={styles.carouselText}>
+            Identify the following shapes among other shapes
+          </Text>
+          <TouchableOpacity
+              style={styles.startButton}
+              onPress={() => router.push("/(tabs)/(stack)/memorycheckgame")}
+          >
+            <Text style={styles.startButtonText}>Proceed</Text>
+          </TouchableOpacity>
         </View>
-        <Text style={styles.carouselText}>
-          Identify the following shapes among other shapes
-        </Text>
-        <TouchableOpacity
-        style={styles.startButton}
-        onPress={() => router.push("/(tabs)/(stack)/TOC")}
-        >
-        <Text style={styles.startButtonText}>Proceed</Text>
-      </TouchableOpacity>
       </View>
-      {/* Start Test Button */}
-    </View>
   );
 }
 
@@ -45,8 +42,6 @@ const styles = StyleSheet.create({
     alignItems: "center",
     padding: 20,
   },
-
-  /** Header Section **/
   header: {
     flexDirection: "row",
     alignItems: "center",
@@ -63,8 +58,6 @@ const styles = StyleSheet.create({
     color: "gray",
     marginLeft: 10,
   },
-
-  /** Carousel Box **/
   carouselBox: {
     backgroundColor: "#28C76F",
     width: "100%",
@@ -100,8 +93,6 @@ const styles = StyleSheet.create({
   activeDot: {
     opacity: 1,
   },
-
-  /** Info Box **/
   infoBox: {
     backgroundColor: "#F8F8F8",
     width: "100%",
@@ -129,8 +120,6 @@ const styles = StyleSheet.create({
     color: "#28C76F",
     marginBottom: 10,
   },
-
-  /** Person Row **/
   personRow: {
     flexDirection: "row",
     alignItems: "center",
@@ -152,8 +141,6 @@ const styles = StyleSheet.create({
     color: "#28C76F",
     fontWeight: "bold",
   },
-
-  /** Start Button **/
   startButton: {
     backgroundColor: "#fff",
     width: "100%",

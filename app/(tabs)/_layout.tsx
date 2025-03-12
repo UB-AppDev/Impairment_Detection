@@ -68,13 +68,20 @@ export default function TabLayout() {
                     tabBarItemStyle: { display: "none" },
                 }}
             />
+            <Tabs.Screen
+                name="(stack)/memorycheckgame"
+                options={{
+                    tabBarButton: () => null,
+                    tabBarItemStyle: { display: "none" },
+                }}
+            />
         </Tabs>
     );
 }
 
 const styles = StyleSheet.create({
     tabBar: {
-        backgroundColor: "#28C76F",
+        backgroundColor: "#25D366",
         height: 70,
         borderTopLeftRadius: 20,
         borderTopRightRadius: 20,
