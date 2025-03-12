@@ -38,12 +38,14 @@ export default function MemoryCheckGame() {
         setCorrectIcons(selectCorrectIcons(iconsGrid));
     };
 
+    const handleProceed = () => {
+        setCurrentStep((prev) => (prev < 4 ? prev + 1 : prev));
+        resetGame();
+    };
+
     const handleSubmit = () => {
         if (buttonText === "Proceed") {
-            setProgressStatus((prev) =>
-                prev.map((status, index) => (index === currentStep ? "failed" : status))
-            );
-            resetGame();
+            handleProceed();
             return;
         }
 
@@ -62,8 +64,7 @@ export default function MemoryCheckGame() {
             setProgressStatus((prev) =>
                 prev.map((status, index) => (index === currentStep ? "completed" : status))
             );
-            setCurrentStep((prev) => (prev < 4 ? prev + 1 : prev));
-            resetGame();
+            handleProceed();
         } else {
             setProgressStatus((prev) =>
                 prev.map((status, index) => (index === currentStep ? "failed" : status))
