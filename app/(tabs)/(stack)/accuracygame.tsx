@@ -1,32 +1,34 @@
-import { View, Text, Image, StyleSheet, TouchableOpacity } from "react-native";
+import { View, Text, StyleSheet, TouchableOpacity } from "react-native";
 import { useRouter } from "expo-router";
-import { ThemedText } from "@/components/ThemedText";
-import { Ionicons } from "@expo/vector-icons";
+import { FontAwesome5 } from "@expo/vector-icons";
+import { randomizeIcons, selectCorrectIcons } from "@/logic/Randomizer";
 
 export default function AccuracyScreen() {
   const router = useRouter();
+  const iconsGrid = randomizeIcons();
+  const correctIcons = selectCorrectIcons(iconsGrid);
 
   return (
       <View style={styles.screenContainer}>
         <View style={styles.header}>
-          <Ionicons name="person-circle-outline" size={50} color="black" />
+          <FontAwesome5 name="user-circle" size={50} color="black" />
           <View>
             <Text style={styles.headerTitle}>Jane Doe</Text>
-            <Text style={styles.headerSubtitle}>patient</Text>
+            <Text style={styles.headerSubtitle}>Patient</Text>
           </View>
         </View>
 
         <View style={styles.carouselBox}>
           <View style={styles.iconContainer}>
-            <Ionicons name="bug-outline" size={40} color="white" />
-            <Ionicons name="boat-outline" size={40} color="white" />
+            <FontAwesome5 name={correctIcons[0]} size={40} color="white" />
+            <FontAwesome5 name={correctIcons[1]} size={40} color="white" />
           </View>
           <Text style={styles.carouselText}>
             Identify the following shapes among other shapes
           </Text>
           <TouchableOpacity
               style={styles.startButton}
-              onPress={() => router.push("/(tabs)/(stack)/memorycheckgame")}
+              onPress={() => router.push({ pathname: "/(tabs)/(stack)/memorycheckgame", params: { correctIcons } })}
           >
             <Text style={styles.startButtonText}>Proceed</Text>
           </TouchableOpacity>
@@ -77,69 +79,6 @@ const styles = StyleSheet.create({
     color: "white",
     textAlign: "center",
     marginTop: 10,
-  },
-  paginationDots: {
-    flexDirection: "row",
-    marginTop: 10,
-  },
-  dot: {
-    width: 8,
-    height: 8,
-    backgroundColor: "#fff",
-    borderRadius: 4,
-    marginHorizontal: 3,
-    opacity: 0.5,
-  },
-  activeDot: {
-    opacity: 1,
-  },
-  infoBox: {
-    backgroundColor: "#F8F8F8",
-    width: "100%",
-    borderRadius: 12,
-    padding: 20,
-    marginBottom: 20,
-  },
-  sectionTitle: {
-    fontSize: 18,
-    fontWeight: "bold",
-    marginBottom: 8,
-  },
-  description: {
-    fontSize: 14,
-    color: "gray",
-    marginBottom: 12,
-  },
-  subtitle: {
-    fontSize: 14,
-    fontWeight: "bold",
-    marginTop: 8,
-  },
-  highlightText: {
-    fontSize: 14,
-    color: "#28C76F",
-    marginBottom: 10,
-  },
-  personRow: {
-    flexDirection: "row",
-    alignItems: "center",
-    marginTop: 10,
-  },
-  personInfo: {
-    flex: 1,
-    marginLeft: 10,
-  },
-  personName: {
-    fontSize: 14,
-    fontWeight: "bold",
-  },
-  personRole: {
-    fontSize: 12,
-    color: "gray",
-  },
-  editText: {
-    color: "#28C76F",
-    fontWeight: "bold",
   },
   startButton: {
     backgroundColor: "#fff",

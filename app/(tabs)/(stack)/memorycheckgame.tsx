@@ -1,63 +1,124 @@
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { View, Text, StyleSheet, TouchableOpacity } from "react-native";
-import { Ionicons } from "@expo/vector-icons";
+import { FontAwesome5 } from "@expo/vector-icons";
+import { useLocalSearchParams } from "expo-router";
+import GameHeader from "@/components/GameHeader";
+import { randomizeIcons, selectCorrectIcons } from "@/logic/Randomizer";
+import ProgressTracker from "@/components/ProgressTracker";
 
 export default function MemoryCheckGame() {
+    const { correctIcons: passedCorrectIcons } = useLocalSearchParams();
     const [selectedItems, setSelectedItems] = useState([]);
+    const [iconsGrid, setIconsGrid] = useState(randomizeIcons());
+    const [correctIcons, setCorrectIcons] = useState([]);
+    const [currentStep, setCurrentStep] = useState(0);
+    const [progressStatus, setProgressStatus] = useState(["inProgress", "inProgress", "inProgress", "inProgress"]);
+    const [incorrectSelections, setIncorrectSelections] = useState([]);
+    const [showFeedback, setShowFeedback] = useState(false);
+    const [buttonText, setButtonText] = useState("Submit");
 
-    const toggleSelection = (item) => {
-        setSelectedItems((prev) =>
-            prev.includes(item)
-                ? prev.filter((i) => i !== item)
-                : [...prev, item]
-        );
+    useEffect(() => {
+        setCorrectIcons(selectCorrectIcons(iconsGrid));
+    }, [iconsGrid]);
+
+    const toggleSelection = (icon, index) => {
+        if (!showFeedback) {
+            setSelectedItems((prev) =>
+                prev.includes(index) ? prev.filter((i) => i !== index) : [...prev, index]
+            );
+        }
+    };
+
+    const resetGame = () => {
+        setIconsGrid(randomizeIcons());
+        setSelectedItems([]);
+        setIncorrectSelections([]);
+        setShowFeedback(false);
+        setButtonText("Submit");
+        setCorrectIcons(selectCorrectIcons(iconsGrid));
+    };
+
+    const handleProceed = () => {
+        setCurrentStep((prev) => (prev < 4 ? prev + 1 : prev));
+        resetGame();
+    };
+
+    const handleSubmit = () => {
+        if (buttonText === "Proceed") {
+            handleProceed();
+            return;
+        }
+
+        const selectedIcons = selectedItems.map((index) => {
+            const row = Math.floor(index / 3);
+            const col = index % 3;
+            return iconsGrid[row][col];
+        });
+
+        const allCorrect =
+            correctIcons.length &&
+            selectedIcons.length === correctIcons.length &&
+            correctIcons.every((icon) => selectedIcons.includes(icon));
+
+        if (allCorrect) {
+            setProgressStatus((prev) =>
+                prev.map((status, index) => (index === currentStep ? "completed" : status))
+            );
+            handleProceed();
+        } else {
+            setProgressStatus((prev) =>
+                prev.map((status, index) => (index === currentStep ? "failed" : status))
+            );
+            setIncorrectSelections(selectedIcons.filter((icon) => !correctIcons.includes(icon)));
+            setShowFeedback(true);
+            setButtonText("Proceed");
+        }
     };
 
     return (
         <View style={styles.screenContainer}>
-            <View style={styles.header}>
-                <Ionicons name="person-circle-outline" size={50} color="black" />
-                <View>
-                    <Text style={styles.headerTitle}>Jane Doe</Text>
-                    <Text style={styles.headerSubtitle}>Client</Text>
-                </View>
-            </View>
+            <GameHeader />
 
             <View style={styles.carouselBox}>
                 <Text style={styles.carouselText}>Identify the items correctly!</Text>
                 <View style={styles.iconGrid}>
-                    {["horse", "bug", "horse", "horse", "horse", "boat", "horse", "horse", "horse"].map(
-                        (icon, index) => (
-                            <TouchableOpacity
-                                key={index}
-                                onPress={() => toggleSelection(index)}
-                            >
-                                <Ionicons
-                                    name={`${icon}-outline`}
-                                    size={50}
-                                    color={selectedItems.includes(index) ? "white" : "black"}
-                                    style={styles.icon}
-                                />
-                            </TouchableOpacity>
-                        )
-                    )}
+                    {iconsGrid.map((row, rowIndex) => (
+                        <View key={rowIndex} style={styles.row}>
+                            {row.map((icon, colIndex) => {
+                                const index = rowIndex * 3 + colIndex;
+                                return (
+                                    <TouchableOpacity
+                                        key={index}
+                                        onPress={() => toggleSelection(icon, index)}
+                                        style={[
+                                            styles.iconWrapper,
+                                            showFeedback && correctIcons.includes(icon) && styles.correctSelection,
+                                            showFeedback && incorrectSelections.includes(icon) && styles.incorrectSelection,
+                                        ]}
+                                    >
+                                        <FontAwesome5
+                                            name={icon}
+                                            size={50}
+                                            color={
+                                                showFeedback && incorrectSelections.includes(icon)
+                                                    ? "white"
+                                                    : selectedItems.includes(index)
+                                                        ? "white"
+                                                        : "black"
+                                            }
+                                        />
+                                    </TouchableOpacity>
+                                );
+                            })}
+                        </View>
+                    ))}
                 </View>
-                <TouchableOpacity style={styles.submitButton}>
-                    <Text style={styles.submitButtonText}>Submit</Text>
+                <TouchableOpacity style={styles.submitButton} onPress={handleSubmit}>
+                    <Text style={styles.submitButtonText}>{buttonText}</Text>
                 </TouchableOpacity>
             </View>
 
-            <View style={styles.progressContainer}>
-                {["1", "2", "3", "4"].map((num) => (
-                    <View key={num} style={styles.progressItem}>
-                        <Text style={styles.progressText}>{num}</Text>
-                        <Text style={styles.progressLabel}>Question {num}</Text>
-                        <View style={styles.progressStatus}>
-                            <Text style={styles.statusText}>In Progress</Text>
-                        </View>
-                    </View>
-                ))}
-            </View>
+            <ProgressTracker progressStatus={progressStatus} />
         </View>
     );
 }
@@ -68,22 +129,6 @@ const styles = StyleSheet.create({
         backgroundColor: "#fff",
         alignItems: "center",
         padding: 20,
-    },
-    header: {
-        flexDirection: "row",
-        alignItems: "center",
-        width: "100%",
-        marginBottom: 20,
-    },
-    headerTitle: {
-        fontSize: 18,
-        fontWeight: "bold",
-        marginLeft: 10,
-    },
-    headerSubtitle: {
-        fontSize: 14,
-        color: "gray",
-        marginLeft: 10,
     },
     carouselBox: {
         backgroundColor: "#28C76F",
@@ -102,13 +147,27 @@ const styles = StyleSheet.create({
         marginBottom: 20,
     },
     iconGrid: {
-        flexDirection: "row",
-        flexWrap: "wrap",
-        justifyContent: "center",
-        gap: 10,
+        alignItems: "center",
     },
-    icon: {
-        margin: 5,
+    row: {
+        flexDirection: "row",
+        justifyContent: "center",
+        alignItems: "center",
+        marginBottom: 10,
+    },
+    iconWrapper: {
+        width: 70,
+        height: 70,
+        justifyContent: "center",
+        alignItems: "center",
+    },
+    correctSelection: {
+        backgroundColor: "#25D366",
+        borderRadius: 10,
+    },
+    incorrectSelection: {
+        backgroundColor: "#E74C3C",
+        borderRadius: 10,
     },
     submitButton: {
         backgroundColor: "#fff",
@@ -122,33 +181,5 @@ const styles = StyleSheet.create({
         color: "#28C76F",
         fontSize: 16,
         fontWeight: "bold",
-    },
-    progressContainer: {
-        flexDirection: "row",
-        justifyContent: "space-around",
-        width: "100%",
-        marginTop: 20,
-    },
-    progressItem: {
-        alignItems: "center",
-    },
-    progressText: {
-        fontSize: 18,
-        fontWeight: "bold",
-    },
-    progressLabel: {
-        fontSize: 12,
-        color: "gray",
-    },
-    progressStatus: {
-        backgroundColor: "#2C6BED",
-        paddingHorizontal: 10,
-        paddingVertical: 5,
-        borderRadius: 10,
-        marginTop: 5,
-    },
-    statusText: {
-        color: "white",
-        fontSize: 12,
     },
 });
