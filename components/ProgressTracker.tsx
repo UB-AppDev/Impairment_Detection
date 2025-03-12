@@ -1,14 +1,21 @@
 import { View, Text, StyleSheet } from "react-native";
 
-const ProgressTracker = () => {
+const ProgressTracker = ({ currentStep }) => {
     return (
         <View style={styles.progressContainer}>
-            {["1", "2", "3", "4"].map((num) => (
+            {["1", "2", "3", "4"].map((num, index) => (
                 <View key={num} style={styles.progressItem}>
                     <Text style={styles.progressText}>{num}</Text>
                     <Text style={styles.progressLabel}>Question {num}</Text>
-                    <View style={styles.progressStatus}>
-                        <Text style={styles.statusText}>In Progress</Text>
+                    <View
+                        style={[
+                            styles.progressStatus,
+                            index < currentStep ? styles.completedStatus : styles.inProgressStatus,
+                        ]}
+                    >
+                        <Text style={styles.statusText}>
+                            {index < currentStep ? "Completed" : "In Progress"}
+                        </Text>
                     </View>
                 </View>
             ))}
@@ -41,11 +48,16 @@ const styles = StyleSheet.create({
         marginTop: 5,
     },
     progressStatus: {
-        backgroundColor: "#638AB4",
         paddingHorizontal: 16,
         paddingVertical: 8,
         borderRadius: 20,
         marginTop: 8,
+    },
+    inProgressStatus: {
+        backgroundColor: "#638AB4",
+    },
+    completedStatus: {
+        backgroundColor: "#28C76F",
     },
     statusText: {
         color: "white",

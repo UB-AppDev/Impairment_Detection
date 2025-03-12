@@ -1,3 +1,4 @@
+// MemoryCheckGame.js
 import { useState } from "react";
 import { View, Text, StyleSheet, TouchableOpacity } from "react-native";
 import { FontAwesome5 } from "@expo/vector-icons";
@@ -8,6 +9,7 @@ import ProgressTracker from "@/components/ProgressTracker";
 export default function MemoryCheckGame() {
     const [selectedItems, setSelectedItems] = useState([]);
     const [iconsGrid, setIconsGrid] = useState(randomizeIcons());
+    const [currentStep, setCurrentStep] = useState(0);
 
     const toggleSelection = (item) => {
         setSelectedItems((prev) =>
@@ -20,6 +22,7 @@ export default function MemoryCheckGame() {
     const handleSubmit = () => {
         setIconsGrid(randomizeIcons());
         setSelectedItems([]);
+        setCurrentStep((prev) => (prev < 4 ? prev + 1 : prev));
     };
 
     return (
@@ -51,7 +54,7 @@ export default function MemoryCheckGame() {
                 </TouchableOpacity>
             </View>
 
-            <ProgressTracker />
+            <ProgressTracker currentStep={currentStep} />
         </View>
     );
 }
@@ -75,7 +78,6 @@ const styles = StyleSheet.create({
     carouselText: {
         color: "white",
         fontSize: 18,
-        fontWeight: "bold",
         textAlign: "center",
         marginBottom: 20,
     },
@@ -97,7 +99,7 @@ const styles = StyleSheet.create({
     submitButton: {
         backgroundColor: "#fff",
         width: "80%",
-        paddingVertical: 15,
+        paddingVertical: 13,
         borderRadius: 30,
         alignItems: "center",
         marginTop: 20,
@@ -105,6 +107,5 @@ const styles = StyleSheet.create({
     submitButtonText: {
         color: "#28C76F",
         fontSize: 16,
-        fontWeight: "bold",
     },
 });
