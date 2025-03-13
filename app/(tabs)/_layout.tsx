@@ -48,28 +48,28 @@ export default function TabLayout() {
                 }}
             />
             <Tabs.Screen
-                name="(stack)/TOC"
+                name="(stack)/MemoryCheck/TOC"
                 options={{
                     tabBarButton: () => null,
                     tabBarItemStyle: { display: "none" },
                 }}
             />
             <Tabs.Screen
-                name="(stack)/accuracy"
+                name="(stack)/MemoryCheck/accuracy"
                 options={{
                     tabBarButton: () => null,
                     tabBarItemStyle: { display: "none" },
                 }}
             />
             <Tabs.Screen
-                name="(stack)/accuracygame"
+                name="(stack)/MemoryCheck/accuracygame"
                 options={{
                     tabBarButton: () => null,
                     tabBarItemStyle: { display: "none" },
                 }}
             />
             <Tabs.Screen
-                name="(stack)/memorycheckgame"
+                name="(stack)/MemoryCheck/memorycheckgame"
                 options={{
                     tabBarButton: () => null,
                     tabBarItemStyle: { display: "none" },

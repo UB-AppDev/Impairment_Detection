@@ -30,7 +30,7 @@ export default function ProfileScreen() {
 }
 
 const testItems = [
-  { text: "Memory Check", image: require("@/assets/images/memorycheck.png"), route: "/(tabs)/(stack)/accuracy" },
+  { text: "Memory Check", image: require("@/assets/images/memorycheck.png"), route: "/(tabs)/(stack)/MemoryCheck/accuracy" },
   { text: "Stroop Naming", image: require("@/assets/images/stropnaming.png"), route: "/(tabs)/(stack)/accuracy" },
   { text: "Typing Challenge", image: require("@/assets/images/typingchallenge.png"), route: "/(tabs)/(stack)/accuracy" },
   { text: "Walk and Turn", image: require("@/assets/images/memorycheck.png"), route: "/(tabs)/(stack)/accuracy" },
