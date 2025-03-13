@@ -18,7 +18,7 @@ export default function TypingChallangeGameInfo() {
                 <Text style={styles.stroopedText}>The quick brown fox ju...
                 </Text>
             <Text style={styles.carouselText}>
-            You will be presented with a series of phrases. Please type them as accurately and quickly as possible.
+                This test requires you to type
             </Text>
             <View style={styles.paginationDots}>
               <View style={styles.dot} />

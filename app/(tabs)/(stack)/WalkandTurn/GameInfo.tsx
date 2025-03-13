@@ -15,9 +15,9 @@ export default function WalkandTurnGameInfo() {
           </View>
   
           <View style={styles.carouselBox}>
-                <Text style={styles.stroopedText}>RED</Text>
+                <Image source={require("@/assets/images/walk_and_turn-removebg-preview.png")} style={styles.walkkingImage}></Image>
             <Text style={styles.carouselText}>
-                Choose the answer choice that matching the color of the word, not what the text says.
+                This test will requrire you to walk
             </Text>
             <View style={styles.paginationDots}>
               <View style={styles.dot} />
@@ -27,9 +27,9 @@ export default function WalkandTurnGameInfo() {
           </View>
   
           <View style={styles.infoBox}>
-            <Text style={styles.sectionTitle}>Memory Check</Text>
+            <Text style={styles.sectionTitle}>Walk and Turn</Text>
             <Text style={styles.description}>
-                A word will appear at the top of the screen, with three answer choices at the bottom. Choose the answer choice that matching the color of the word, not what the text says.
+                    Please place your smartphone in your back pocket, on the opposite side of your smartwatch. When ready, tap the “ready” button on your smart watch. When the countdown reaches zero, walk 5 normal steps forward, turn around, and walk five normal steps back. When finished, tap the “end” button on your smart watch. 
             </Text>
             <Text style={styles.subtitle}>Duration</Text>
             <Text style={styles.highlightText}>5-10 minutes</Text>
@@ -91,14 +91,10 @@ export default function WalkandTurnGameInfo() {
       alignItems: "center",
       marginBottom: 20,
     },
-    stroopedText: {
-      fontSize: 48,         // Larger text
-      fontWeight: "bold",   // Bold text
-      color: "blue",        // Blue color
-      textAlign: "center",  // Centers text horizontally (if applied to Text)
-      justifyContent: "center", // Centers content vertically in the container
-      alignItems: "center",     // Centers content horizontally in the container
-      width: 100,
+    walkkingImage:{
+        width: 80,
+        height: 80,
+        resizeMode: 'contain',
     },
     carouselText: {
       color: "white",

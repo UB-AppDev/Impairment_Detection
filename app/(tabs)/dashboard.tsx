@@ -31,7 +31,7 @@ const testItems = [
   { text: "Memory Check", image: require("@/assets/images/memorycheck.png"), route: "/(tabs)/(stack)/MemoryCheck/GameInfo" },
   { text: "Stroop Naming", image: require("@/assets/images/stropnaming.png"), route: "/(tabs)/(stack)/StroopNaming/GameInfo" },
   { text: "Typing Challenge", image: require("@/assets/images/typingchallenge.png"), route: "/(tabs)/(stack)/TypingChallenge/GameInfo" },
-  { text: "Walk and Turn", image: require("@/assets/images/memorycheck.png"), route: "/(tabs)/(stack)/WalkandTurn/GameInfo" },
+  { text: "Walk and Turn", image: require("@/assets/images/walk_and_turn-removebg-preview.png"), route: "/(tabs)/(stack)/WalkandTurn/GameInfo" },
   { text: "Choice Reaction", image: require("@/assets/images/memorycheck.png"), route: "/(tabs)/(stack)/accuracy" },
   { text: "Tongue Twisters", image: require("@/assets/images/memorycheck.png"), route: "/(tabs)/(stack)/accuracy" },
   { text: "Single Leg Balance", image: require("@/assets/images/memorycheck.png"), route: "/(tabs)/(stack)/accuracy" },

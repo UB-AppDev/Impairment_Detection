@@ -17,7 +17,7 @@ export default function StroopNamingGameInfo() {
           <View style={styles.carouselBox}>
                 <Text style={styles.stroopedText}>RED</Text>
             <Text style={styles.carouselText}>
-                Choose the answer choice that matching the color of the word, not what the text says.
+                This test requires you to tap the screen
             </Text>
             <View style={styles.paginationDots}>
               <View style={styles.dot} />
@@ -27,7 +27,7 @@ export default function StroopNamingGameInfo() {
           </View>
   
           <View style={styles.infoBox}>
-            <Text style={styles.sectionTitle}>Memory Check</Text>
+            <Text style={styles.sectionTitle}>Stroop Naming</Text>
             <Text style={styles.description}>
                 A word will appear at the top of the screen, with three answer choices at the bottom. Choose the answer choice that matching the color of the word, not what the text says.
             </Text>
