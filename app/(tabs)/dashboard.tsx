@@ -9,7 +9,6 @@ export default function ProfileScreen() {
   return (
       <View style={styles.screenContainer}>
         <DashboardHeader />
-        <ScrollView contentContainerStyle={styles.scrollContent}>
           <View style={styles.squircleContainer}>
             {testItems.map((item, index) => (
                 <TouchableOpacity
@@ -24,16 +23,15 @@ export default function ProfileScreen() {
                 </TouchableOpacity>
             ))}
           </View>
-        </ScrollView>
       </View>
   );
 }
 
 const testItems = [
-  { text: "Memory Check", image: require("@/assets/images/memorycheck.png"), route: "/(tabs)/(stack)/MemoryCheck/accuracy" },
-  { text: "Stroop Naming", image: require("@/assets/images/stropnaming.png"), route: "/(tabs)/(stack)/accuracy" },
-  { text: "Typing Challenge", image: require("@/assets/images/typingchallenge.png"), route: "/(tabs)/(stack)/accuracy" },
-  { text: "Walk and Turn", image: require("@/assets/images/memorycheck.png"), route: "/(tabs)/(stack)/accuracy" },
+  { text: "Memory Check", image: require("@/assets/images/memorycheck.png"), route: "/(tabs)/(stack)/MemoryCheck/GameInfo" },
+  { text: "Stroop Naming", image: require("@/assets/images/stropnaming.png"), route: "/(tabs)/(stack)/StroopNaming/GameInfo" },
+  { text: "Typing Challenge", image: require("@/assets/images/typingchallenge.png"), route: "/(tabs)/(stack)/TypingChallenge/GameInfo" },
+  { text: "Walk and Turn", image: require("@/assets/images/memorycheck.png"), route: "/(tabs)/(stack)/WalkandTurn/GameInfo" },
   { text: "Choice Reaction", image: require("@/assets/images/memorycheck.png"), route: "/(tabs)/(stack)/accuracy" },
   { text: "Tongue Twisters", image: require("@/assets/images/memorycheck.png"), route: "/(tabs)/(stack)/accuracy" },
   { text: "Single Leg Balance", image: require("@/assets/images/memorycheck.png"), route: "/(tabs)/(stack)/accuracy" },
@@ -44,9 +42,6 @@ const styles = StyleSheet.create({
   screenContainer: {
     flex: 1,
     backgroundColor: '#fff',
-  },
-  scrollContent: {
-    padding: 20,
   },
   squircleContainer: {
     flexDirection: 'row',

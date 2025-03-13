@@ -1,6 +1,5 @@
 import { View, Text, Image, StyleSheet, TouchableOpacity } from "react-native";
 import { useRouter } from "expo-router";
-import { ThemedText } from "@/components/ThemedText";
 import { Ionicons } from "@expo/vector-icons";
 
 export default function AccuracyScreen() {
@@ -32,11 +31,10 @@ export default function AccuracyScreen() {
         </View>
 
         <View style={styles.infoBox}>
-          <Text style={styles.sectionTitle}>Item Accuracy</Text>
+          <Text style={styles.sectionTitle}>Memory Check</Text>
           <Text style={styles.description}>
-            Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do
-            eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad
-            minim veniam, quis nostrud exercitation.
+            You will be shown a series of 3 pictures. Memorize the object in the picture and the order of the pictures. You will then be asked to select those 3 pictures out of a larger group in the correct order. At some point later in this test, you will be asked to identify these same pictures in the correct order a second time. Remember them!
+
           </Text>
           <Text style={styles.subtitle}>Duration</Text>
           <Text style={styles.highlightText}>5-10 minutes</Text>
@@ -59,7 +57,7 @@ export default function AccuracyScreen() {
 
         <TouchableOpacity
             style={styles.startButton}
-            onPress={() => router.push("/(tabs)/(stack)/TOC")}
+            onPress={() => router.push("/(tabs)/(stack)/MemoryCheck/TermsOfConditons")}
         >
           <Text style={styles.startButtonText}>Start Test</Text>
         </TouchableOpacity>

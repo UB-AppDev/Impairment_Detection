@@ -31,24 +31,39 @@ export default function TOCScreen() {
           </View>
 
           <View style={styles.infoBox}>
-            <Text style={styles.sectionTitle}>Item Accuracy</Text>
+            <Text style={styles.sectionTitle}>Memory Check</Text>
             <Text style={styles.description}>
-              Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation.
               {"\n\n"}
-              Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation.
+              1. Acceptance of Terms: 
               {"\n\n"}
-              Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation.
+              By participating in this sobriety test, you agree to be bound by these terms and confirm you are of legal age and capable of consenting.
               {"\n\n"}
-              Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation.
+              2. Test Procedure: 
               {"\n\n"}
-              Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation.
+              The test is designed to assess your sobriety through a series of standardized tasks. You agree to follow all instructions provided.
               {"\n\n"}
-              Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation.
+              3. Accuracy and Limitations: 
               {"\n\n"}
-              Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation.
+              This test is offered on an "as-is" basis without warranties. The results are solely for personal evaluation and not legal or medical advice.
+              {"\n\n"}
+              4. Data and Privacy: 
+              {"\n\n"}
+              All data collected during the test will be anonymized and used only for evaluation and test improvement. No personal information will be shared.
+              {"\n\n"}
+              5. Liability Disclaimer: 
+              {"\n\n"}
+              Test administrators and associated parties are not liable for any damages or losses resulting from your participation. You assume all risks involved.
+              {"\n\n"}
+              6. Modification of Terms: 
+              {"\n\n"}
+              These terms may be updated at any time. Continued participation after changes indicates acceptance of the revised terms.
+              {"\n\n"}
+              7. Governing Law: 
+              {"\n\n"}
+              These terms are governed by the applicable laws of the jurisdiction in which the test is conducted.
             </Text>
             <TouchableOpacity style={styles.startButton}
-                              onPress={() => router.push("/(tabs)/(stack)/accuracygame")}
+                              onPress={() => router.push("/(tabs)/(stack)/MemoryCheck/Game")}
             >
               <Text style={styles.startButtonText}>Start Test</Text>
             </TouchableOpacity>
