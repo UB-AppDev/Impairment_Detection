@@ -93,7 +93,7 @@ export default function MemoryCheckGame() {
                                 You have completed the test, please proceed to see your results!
                             </Text>
                             <FontAwesome5 name="chart-bar" size={80} color="black" style={styles.completedIcon} />
-                            <TouchableOpacity style={styles.resultsButton} onPress={() => router.push("/(stack)/TOC")}>
+                            <TouchableOpacity style={styles.resultsButton} onPress={() => router.push("/(stack)/gameresult")}>
                                 <Text style={styles.resultsButtonText}>Proceed to Results</Text>
                             </TouchableOpacity>
                         </View>
