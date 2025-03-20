@@ -172,10 +172,10 @@ const styles = StyleSheet.create({
     },
     completedText: {
         color: "white",
-        fontSize: 18,
-        fontWeight: "bold",
+        fontSize: 12,
         textAlign: "center",
         marginBottom: 20,
+        width: '80%',
     },
     completedIcon: {
         marginBottom: 20,
@@ -189,7 +189,6 @@ const styles = StyleSheet.create({
     resultsButtonText: {
         color: "#28C76F",
         fontSize: 16,
-        fontWeight: "bold",
     },
     carouselText: {
         color: "white",
