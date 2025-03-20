@@ -93,7 +93,7 @@ export default function MemoryCheckGame() {
                                 You have completed the test, please proceed to see your results!
                             </Text>
                             <FontAwesome5 name="chart-bar" size={80} color="black" style={styles.completedIcon} />
-                            <TouchableOpacity style={styles.resultsButton} onPress={() => router.push("/(stack)/TOC")}>
+                            <TouchableOpacity style={styles.resultsButton} onPress={() => router.push("/(stack)/gameresult")}>
                                 <Text style={styles.resultsButtonText}>Proceed to Results</Text>
                             </TouchableOpacity>
                         </View>
@@ -172,10 +172,10 @@ const styles = StyleSheet.create({
     },
     completedText: {
         color: "white",
-        fontSize: 18,
-        fontWeight: "bold",
+        fontSize: 12,
         textAlign: "center",
         marginBottom: 20,
+        width: '80%',
     },
     completedIcon: {
         marginBottom: 20,
@@ -189,7 +189,6 @@ const styles = StyleSheet.create({
     resultsButtonText: {
         color: "#28C76F",
         fontSize: 16,
-        fontWeight: "bold",
     },
     carouselText: {
         color: "white",

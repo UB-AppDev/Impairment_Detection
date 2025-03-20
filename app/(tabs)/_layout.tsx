@@ -75,6 +75,13 @@ export default function TabLayout() {
                     tabBarItemStyle: { display: "none" },
                 }}
             />
+            <Tabs.Screen
+                name="(stack)/gameresult"
+                options={{
+                    tabBarButton: () => null,
+                    tabBarItemStyle: { display: "none" },
+                }}
+            />
         </Tabs>
     );
 }
