@@ -1,4 +1,4 @@
-import { View, Text, StyleSheet, TouchableOpacity } from "react-native";
+import { View, Text, StyleSheet, TouchableOpacity, ScrollView } from "react-native";
 import { useRouter } from "expo-router";
 import { Ionicons } from "@expo/vector-icons";
 import DashboardHeader from "@/components/DashboardHeader";
@@ -26,9 +26,11 @@ export default function AccuracyScreen() {
           </View>
           <View style={styles.infoBox}>
             <Text style={styles.sectionTitle}>Item Accuracy</Text>
-            <Text style={styles.description}>
-              Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation.
-            </Text>
+            <ScrollView style={styles.scrollContainer} contentContainerStyle={styles.scrollContent}>
+              <Text style={styles.description}>
+                The Accuracy Test is designed to evaluate a player's ability to recognize and recall specific shapes within a given timeframe. Participants will be presented with a set of shapes and asked to identify the correct ones from a larger grid. The test progresses through multiple stages, with increasing difficulty, to assess cognitive processing and visual memory accuracy. The goal is to measure how well a participant can differentiate between similar patterns under controlled conditions. The test duration is approximately 5-10 minutes, and results will be provided upon completion.
+              </Text>
+            </ScrollView>
             <Text style={styles.subtitle}>Duration</Text>
             <Text style={styles.highlightText}>5-10 minutes</Text>
             <Text style={styles.testerLabel}>Testee</Text>
@@ -117,6 +119,13 @@ const styles = StyleSheet.create({
     borderBottomStartRadius: 12,
     padding: 20,
     justifyContent: "space-between",
+  },
+  scrollContainer: {
+    maxHeight: 120,
+    marginBottom: 10,
+  },
+  scrollContent: {
+    flexGrow: 1,
   },
   sectionTitle: {
     fontSize: 18,
