@@ -13,7 +13,7 @@ export default function SignUp() {
     const handleSignup = async () => {
         try {
             await createUserWithEmailAndPassword(auth, email, password);
-            router.replace('/dashboard');
+            router.replace('/auth/firstandlastname');
         } catch (error: any) {
             Alert.alert('Sign Up Failed', error.message);
         }
