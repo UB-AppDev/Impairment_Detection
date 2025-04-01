@@ -103,15 +103,19 @@ const styles = StyleSheet.create({
         textDecorationLine: 'underline',
     },
     bottomSection: {
-        marginTop: 'auto',
-        marginBottom: 40,
+        flex: 1,
+        justifyContent: 'flex-start',
     },
     staticTabWrapper: {
-        height: 30,
+        height: 40,
+        justifyContent: 'center',
+        alignItems: 'center',
         marginBottom: 20,
     },
     loginOptions: {
         flexDirection: 'row',
+        justifyContent: 'center',
+        alignItems: 'center',
     },
     tab: {
         marginRight: 20,
@@ -131,6 +135,7 @@ const styles = StyleSheet.create({
     },
     inputContainer: {
         marginBottom: 30,
+        paddingHorizontal: 10,
     },
     label: {
         fontSize: 13,
@@ -153,6 +158,7 @@ const styles = StyleSheet.create({
         borderRadius: 50,
         alignItems: 'center',
         marginBottom: 20,
+        marginHorizontal: 10,
     },
     loginText: {
         color: '#fff',
