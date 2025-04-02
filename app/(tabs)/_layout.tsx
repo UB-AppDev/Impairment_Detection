@@ -47,128 +47,41 @@ export default function TabLayout() {
                     ),
                 }}
             />
-            {/* Hiding navigation to Memory Change Games */}
             <Tabs.Screen
-                name="(stack)/MemoryCheck/TermsOfConditons"
-                options={{
-                    tabBarButton: () => null,
-                    tabBarItemStyle: { display: "none" },
-                }}
-            />
-            <Tabs.Screen
-                name="(stack)/MemoryCheck/Game"
+                name="(stack)/TOC"
                 options={{
                     tabBarButton: () => null,
                     tabBarItemStyle: { display: "none" },
                 }}
             />
             <Tabs.Screen
-                name="(stack)/MemoryCheck/GameInfo"
+                name="(stack)/accuracy"
                 options={{
                     tabBarButton: () => null,
                     tabBarItemStyle: { display: "none" },
                 }}
             />
             <Tabs.Screen
-                name="(stack)/MemoryCheck/memorycheckgame"
-                options={{
-                    tabBarButton: () => null,
-                    tabBarItemStyle: { display: "none" },
-                }}
-            />
-
-             {/* Hiding navigation to Sroop Name */}
-             <Tabs.Screen
-                name="(stack)/StroopNaming/TermsOfConditons"
+                name="(stack)/accuracygame"
                 options={{
                     tabBarButton: () => null,
                     tabBarItemStyle: { display: "none" },
                 }}
             />
             <Tabs.Screen
-                name="(stack)/StroopNaming/Game"
+                name="(stack)/memorycheckgame"
                 options={{
                     tabBarButton: () => null,
                     tabBarItemStyle: { display: "none" },
                 }}
             />
             <Tabs.Screen
-                name="(stack)/StroopNaming/GameInfo"
+                name="(stack)/gameresult"
                 options={{
                     tabBarButton: () => null,
                     tabBarItemStyle: { display: "none" },
                 }}
             />
-            <Tabs.Screen
-                name="(stack)/StroopNaming/memorycheckgame"
-                options={{
-                    tabBarButton: () => null,
-                    tabBarItemStyle: { display: "none" },
-                }}
-            />
-
-            {/* Hiding navigation to Walk and Turn */}
-            <Tabs.Screen
-                name="(stack)/WalkandTurn/TermsOfConditons"
-                options={{
-                    tabBarButton: () => null,
-                    tabBarItemStyle: { display: "none" },
-                }}
-            />
-            <Tabs.Screen
-                name="(stack)/WalkandTurn/Game"
-                options={{
-                    tabBarButton: () => null,
-                    tabBarItemStyle: { display: "none" },
-                }}
-            />
-            <Tabs.Screen
-                name="(stack)/WalkandTurn/GameInfo"                
-                options={{
-                    tabBarButton: () => null,
-                    tabBarItemStyle: { display: "none" },
-                }}
-            />
-            <Tabs.Screen
-                name="(stack)/WalkandTurn/memorycheckgame"
-                options={{
-                    tabBarButton: () => null,
-                    tabBarItemStyle: { display: "none" },
-                }}
-            />
-
-            {/* Hiding navigation to Typing Challange */}
-            <Tabs.Screen
-                name="(stack)/TypingChallenge/TermsOfConditons"
-                options={{
-                    tabBarButton: () => null,
-                    tabBarItemStyle: { display: "none" },
-                }}
-            />
-            <Tabs.Screen
-                name="(stack)/TypingChallenge/Game"
-                options={{
-                    tabBarButton: () => null,
-                    tabBarItemStyle: { display: "none" },
-                }}
-            />
-            <Tabs.Screen
-                name="(stack)/TypingChallenge/GameInfo"                
-                options={{
-                    tabBarButton: () => null,
-                    tabBarItemStyle: { display: "none" },
-                }}
-            />
-            <Tabs.Screen
-                name="(stack)/TypingChallenge/memorycheckgame"
-                options={{
-                    tabBarButton: () => null,
-                    tabBarItemStyle: { display: "none" },
-                }}
-            />
-            
-
-
         </Tabs>
     );
 }
