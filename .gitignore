@@ -35,7 +35,4 @@ yarn-error.*
 # typescript
 *.tsbuildinfo
 
-# ignore enviorment varibles
-.env
-
 app-example
