@@ -1,63 +1,66 @@
-import { View, Text, StyleSheet, TouchableOpacity, ScrollView } from "react-native";
+import { View, Text, Image, StyleSheet, TouchableOpacity } from "react-native";
 import { useRouter } from "expo-router";
 import { Ionicons } from "@expo/vector-icons";
-import DashboardHeader from "@/components/DashboardHeader";
 
 export default function AccuracyScreen() {
   const router = useRouter();
 
   return (
       <View style={styles.screenContainer}>
-        <DashboardHeader />
-        <View style={styles.gameWrapper}>
-          <View style={styles.gameContainer}>
-            <View style={styles.iconContainer}>
-              <Ionicons name="bug-outline" size={80} color="black" />
-              <Ionicons name="boat-outline" size={80} color="black" />
-            </View>
-            <Text style={styles.carouselText}>
-              The player will be given a set of shapes to recognize
-            </Text>
-            <View style={styles.paginationDots}>
-              <View style={styles.dot} />
-              <View style={[styles.dot, styles.activeDot]} />
-              <View style={styles.dot} />
-            </View>
-          </View>
-          <View style={styles.infoBox}>
-            <Text style={styles.sectionTitle}>Item Accuracy</Text>
-            <ScrollView style={styles.scrollContainer} contentContainerStyle={styles.scrollContent}>
-              <Text style={styles.description}>
-                The Accuracy Test is designed to evaluate a player's ability to recognize and recall specific shapes within a given timeframe. Participants will be presented with a set of shapes and asked to identify the correct ones from a larger grid. The test progresses through multiple stages, with increasing difficulty, to assess cognitive processing and visual memory accuracy. The goal is to measure how well a participant can differentiate between similar patterns under controlled conditions. The test duration is approximately 5-10 minutes, and results will be provided upon completion.
-              </Text>
-            </ScrollView>
-            <Text style={styles.subtitle}>Duration</Text>
-            <Text style={styles.highlightText}>5-10 minutes</Text>
-            <Text style={styles.testerLabel}>Testee</Text>
-            <View style={styles.personRow}>
-              <Ionicons name="person-circle-outline" size={40} color="black" />
-              <View style={styles.personInfo}>
-                <Text style={styles.personName}>Jane Doe</Text>
-                <Text style={styles.personRole}>Patient</Text>
-              </View>
-              <Text style={styles.editText}>Edit</Text>
-            </View>
-            <Text style={styles.testerLabel}>Tester</Text>
-            <View style={styles.personRow}>
-              <Ionicons name="person-circle-outline" size={40} color="black" />
-              <View style={styles.personInfo}>
-                <Text style={styles.personName}>John Doe</Text>
-                <Text style={styles.personRole}>Doctor of Psychology</Text>
-              </View>
-            </View>
-            <TouchableOpacity
-                style={styles.startButton}
-                onPress={() => router.push("/(tabs)/(stack)/TOC")}
-            >
-              <Text style={styles.startButtonText}>Start Test</Text>
-            </TouchableOpacity>
+        <View style={styles.header}>
+          <Ionicons name="person-circle-outline" size={50} color="black" />
+          <View>
+            <Text style={styles.headerTitle}>John Doe</Text>
+            <Text style={styles.headerSubtitle}>Doctor of Psychology</Text>
           </View>
         </View>
+
+        <View style={styles.carouselBox}>
+          <View style={styles.iconContainer}>
+            <Ionicons name="bug-outline" size={40} color="black" />
+            <Ionicons name="boat-outline" size={40} color="black" />
+          </View>
+          <Text style={styles.carouselText}>
+            The player will be given a set of shapes to recognize
+          </Text>
+          <View style={styles.paginationDots}>
+            <View style={styles.dot} />
+            <View style={[styles.dot, styles.activeDot]} />
+            <View style={styles.dot} />
+          </View>
+        </View>
+
+        <View style={styles.infoBox}>
+          <Text style={styles.sectionTitle}>Memory Check</Text>
+          <Text style={styles.description}>
+            You will be shown a series of 3 pictures. Memorize the object in the picture and the order of the pictures. You will then be asked to select those 3 pictures out of a larger group in the correct order. At some point later in this test, you will be asked to identify these same pictures in the correct order a second time. Remember them!
+
+          </Text>
+          <Text style={styles.subtitle}>Duration</Text>
+          <Text style={styles.highlightText}>5-10 minutes</Text>
+          <View style={styles.personRow}>
+            <Ionicons name="person-circle-outline" size={40} color="black" />
+            <View style={styles.personInfo}>
+              <Text style={styles.personName}>Jane Doe</Text>
+              <Text style={styles.personRole}>Patient</Text>
+            </View>
+            <Text style={styles.editText}>Edit</Text>
+          </View>
+          <View style={styles.personRow}>
+            <Ionicons name="person-circle-outline" size={40} color="black" />
+            <View style={styles.personInfo}>
+              <Text style={styles.personName}>John Doe</Text>
+              <Text style={styles.personRole}>Doctor of Psychology</Text>
+            </View>
+          </View>
+        </View>
+
+        <TouchableOpacity
+            style={styles.startButton}
+            onPress={() => router.push("/(tabs)/(stack)/MemoryCheck/TermsOfConditons")}
+        >
+          <Text style={styles.startButtonText}>Start Test</Text>
+        </TouchableOpacity>
       </View>
   );
 }
@@ -69,31 +72,38 @@ const styles = StyleSheet.create({
     alignItems: "center",
     padding: 20,
   },
-  gameWrapper: {
-    flex: 0.9,
-    width: "100%",
+  header: {
+    flexDirection: "row",
     alignItems: "center",
-  },
-  gameContainer: {
-    backgroundColor: "#25D366",
     width: "100%",
-    flex: 0.4,
-    borderTopStartRadius: 12,
-    borderTopEndRadius: 12,
+    marginBottom: 20,
+  },
+  headerTitle: {
+    fontSize: 18,
+    fontWeight: "bold",
+    marginLeft: 10,
+  },
+  headerSubtitle: {
+    fontSize: 14,
+    color: "gray",
+    marginLeft: 10,
+  },
+  carouselBox: {
+    backgroundColor: "#28C76F",
+    width: "100%",
+    borderRadius: 12,
     padding: 20,
     alignItems: "center",
-    justifyContent: "center",
+    marginBottom: 20,
   },
   iconContainer: {
     flexDirection: "row",
-    justifyContent: "center",
-    width: "100%",
+    justifyContent: "space-between",
+    width: 100,
   },
   carouselText: {
-    color: "#fff",
+    color: "white",
     textAlign: "center",
-    fontSize: 10,
-    width: '70%',
     marginTop: 10,
   },
   paginationDots: {
@@ -114,45 +124,34 @@ const styles = StyleSheet.create({
   infoBox: {
     backgroundColor: "#F8F8F8",
     width: "100%",
-    flex: 0.55,
-    borderBottomEndRadius: 12,
-    borderBottomStartRadius: 12,
+    borderRadius: 12,
     padding: 20,
-    justifyContent: "space-between",
-  },
-  scrollContainer: {
-    maxHeight: 120,
-    marginBottom: 10,
-  },
-  scrollContent: {
-    flexGrow: 1,
+    marginBottom: 20,
   },
   sectionTitle: {
     fontSize: 18,
     fontWeight: "bold",
+    marginBottom: 8,
   },
   description: {
-    fontSize: 9,
-    color: "#000",
-    marginBottom: 2,
+    fontSize: 14,
+    color: "gray",
+    marginBottom: 12,
   },
   subtitle: {
-    fontSize: 12,
-    marginTop: 2,
+    fontSize: 14,
+    fontWeight: "bold",
+    marginTop: 8,
   },
   highlightText: {
-    fontSize: 10,
-    color: "#25D366",
-    marginBottom: 2,
-  },
-  testerLabel: {
-    fontSize: 12,
-    marginTop: 2,
+    fontSize: 14,
+    color: "#28C76F",
+    marginBottom: 10,
   },
   personRow: {
     flexDirection: "row",
     alignItems: "center",
-    marginTop: 2,
+    marginTop: 10,
   },
   personInfo: {
     flex: 1,
@@ -160,25 +159,27 @@ const styles = StyleSheet.create({
   },
   personName: {
     fontSize: 14,
+    fontWeight: "bold",
   },
   personRole: {
-    fontSize: 10,
-    color: "#000",
+    fontSize: 12,
+    color: "gray",
   },
   editText: {
-    color: "#25D366",
-    fontSize: 10,
+    color: "#28C76F",
+    fontWeight: "bold",
   },
   startButton: {
-    backgroundColor: "#25D366",
+    backgroundColor: "#28C76F",
     width: "100%",
     paddingVertical: 15,
     borderRadius: 30,
     alignItems: "center",
-    marginTop: 20,
   },
   startButtonText: {
     color: "#fff",
-    fontSize: 14,
+    fontSize: 16,
+    fontWeight: "bold",
   },
 });
+

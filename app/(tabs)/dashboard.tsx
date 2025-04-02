@@ -1,8 +1,7 @@
 import React from 'react';
-import { View, ScrollView, StyleSheet, TouchableOpacity, Text } from 'react-native';
+import { View, ScrollView, StyleSheet, TouchableOpacity, Image, Text } from 'react-native';
 import { useRouter } from "expo-router";
 import DashboardHeader from '@/components/DashboardHeader';
-import { FontAwesome5 } from '@expo/vector-icons';
 
 export default function ProfileScreen() {
   const router = useRouter();
@@ -10,7 +9,6 @@ export default function ProfileScreen() {
   return (
       <View style={styles.screenContainer}>
         <DashboardHeader />
-        <ScrollView contentContainerStyle={styles.scrollContent}>
           <View style={styles.squircleContainer}>
             {testItems.map((item, index) => (
                 <TouchableOpacity
@@ -19,26 +17,25 @@ export default function ProfileScreen() {
                     onPress={() => router.push(item.route)}
                 >
                   <View style={styles.squircleBox}>
-                    <FontAwesome5 name={item.icon} size={50} color="#25D366" />
+                    <Image source={item.image} style={styles.image} />
                     <Text style={styles.text}>{item.text}</Text>
                   </View>
                 </TouchableOpacity>
             ))}
           </View>
-        </ScrollView>
       </View>
   );
 }
 
 const testItems = [
-  { text: "Memory Check", icon: "brain", route: "/(tabs)/(stack)/accuracy" },
-  { text: "Stroop Naming", icon: "font", route: "/(tabs)/(stack)/accuracy" },
-  { text: "Typing Challenge", icon: "keyboard", route: "/(tabs)/(stack)/accuracy" },
-  { text: "Walk and Turn", icon: "walking", route: "/(tabs)/(stack)/accuracy" },
-  { text: "Choice Reaction", icon: "hand-paper", route: "/(tabs)/(stack)/accuracy" },
-  { text: "Tongue Twisters", icon: "comment-dots", route: "/(tabs)/(stack)/accuracy" },
-  { text: "Single Leg Balance", icon: "balance-scale", route: "/(tabs)/(stack)/accuracy" },
-  { text: "Visual Pursuit", icon: "eye", route: "/(tabs)/(stack)/accuracy" }
+  { text: "Memory Check", image: require("@/assets/images/memorycheck.png"), route: "/(tabs)/(stack)/MemoryCheck/GameInfo" },
+  { text: "Stroop Naming", image: require("@/assets/images/stropnaming.png"), route: "/(tabs)/(stack)/StroopNaming/GameInfo" },
+  { text: "Typing Challenge", image: require("@/assets/images/typingchallenge.png"), route: "/(tabs)/(stack)/TypingChallenge/GameInfo" },
+  { text: "Walk and Turn", image: require("@/assets/images/walk_and_turn-removebg-preview.png"), route: "/(tabs)/(stack)/WalkandTurn/GameInfo" },
+  { text: "Choice Reaction", image: require("@/assets/images/memorycheck.png"), route: "/(tabs)/(stack)/accuracy" },
+  { text: "Tongue Twisters", image: require("@/assets/images/memorycheck.png"), route: "/(tabs)/(stack)/accuracy" },
+  { text: "Single Leg Balance", image: require("@/assets/images/memorycheck.png"), route: "/(tabs)/(stack)/accuracy" },
+  { text: "Visual Pursuit", image: require("@/assets/images/memorycheck.png"), route: "/(tabs)/(stack)/accuracy" }
 ];
 
 const styles = StyleSheet.create({
@@ -46,15 +43,13 @@ const styles = StyleSheet.create({
     flex: 1,
     backgroundColor: '#fff',
   },
-  scrollContent: {
-    padding: 20,
-  },
   squircleContainer: {
     flexDirection: 'row',
     flexWrap: 'wrap',
     justifyContent: 'center',
     marginTop: 10,
   },
+  // Each Squircle item styling (margin between items)
   squircleItem: {
     margin: 10,
     alignItems: 'center',
@@ -73,6 +68,11 @@ const styles = StyleSheet.create({
     width: 130,
     height: 150,
   },
+  image: {
+    width: 80,
+    height: 80,
+    resizeMode: 'contain',
+  },
   text: {
     fontSize: 12,
     fontFamily: 'Poppins',
@@ -82,3 +82,4 @@ const styles = StyleSheet.create({
     textAlign: 'center',
   },
 });
+

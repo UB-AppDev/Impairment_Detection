@@ -21,7 +21,7 @@ export default function IndexScreen() {
 
         <TouchableOpacity
             style={styles.button}
-            onPress={() => router.replace('/auth/signin')}
+            onPress={() => router.replace('/(tabs)/dashboard')}
         >
           <Text style={styles.buttonText}>Begin</Text>
         </TouchableOpacity>

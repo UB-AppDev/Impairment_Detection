@@ -1,32 +1,8 @@
-import React, { useEffect, useState } from 'react';
+import React from 'react';
 import { View, Text, StyleSheet } from 'react-native';
 import { Ionicons } from '@expo/vector-icons';
-import { getFirestore, doc, getDoc } from 'firebase/firestore';
-import { auth } from '@/firebase/firebaseConfig';
 
 const DashboardHeader = () => {
-    const [firstName, setFirstName] = useState('');
-    const [lastName, setLastName] = useState('');
-    const [position, setPosition] = useState('');
-    const db = getFirestore();
-
-    useEffect(() => {
-        const fetchUserData = async () => {
-            const user = auth.currentUser;
-            if (user) {
-                const userRef = doc(db, 'users', user.uid);
-                const userSnap = await getDoc(userRef);
-                if (userSnap.exists()) {
-                    const data = userSnap.data();
-                    setFirstName(data.firstName || '');
-                    setLastName(data.lastName || '');
-                    setPosition(data.position || '');
-                }
-            }
-        };
-        fetchUserData();
-    }, []);
-
     return (
         <View style={styles.headerContainer}>
             <View style={styles.logoContainer}>
@@ -37,8 +13,8 @@ const DashboardHeader = () => {
                 </View>
             </View>
             <View style={styles.textContainer}>
-                <Text style={styles.headerTitle}>{`${firstName} ${lastName}`}</Text>
-                <Text style={styles.headerSubtitle}>{position}</Text>
+                <Text style={styles.headerTitle}>John Doe</Text>
+                <Text style={styles.headerSubtitle}>Doctor of Psychology</Text>
             </View>
             <Ionicons name="person-circle-outline" size={40} color="black" style={styles.icon} />
         </View>
