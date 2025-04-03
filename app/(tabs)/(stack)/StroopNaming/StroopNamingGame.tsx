@@ -68,7 +68,7 @@ export default function StroopNamingGame() {
                     </TouchableOpacity>
                 )}
                 {timerVisable && (
-                    <GameTimer time={10} onTimeUp={() => gameOver()} />
+                    <GameTimer time={30} onTimeUp={() => gameOver()} />
                 )}
             </View>
         </View>
