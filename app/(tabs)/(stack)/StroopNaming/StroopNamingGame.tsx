@@ -5,6 +5,7 @@ import { useLocalSearchParams, useRouter } from "expo-router";
 import GameHeader from "@/components/GameHeader";
 import {StroopGameGen} from "@/logic/StroopGameGen";
 import ProgressTracker from "@/components/ProgressTracker";
+import { GameTimer } from "@/components/GameTimer";
 import { setOptions } from "expo-splash-screen";
 
 export default function StroopNamingGame() {
@@ -12,6 +13,9 @@ export default function StroopNamingGame() {
     const [color, setColor] = useState("");
     const [color_word, setColorWord] = useState("");
     const [options, setGameOptions] = useState<string[]>([]);
+    const [score, setScore] = useState(1);
+    const [timerVisable, setTimerVisable] = useState(false);
+    
 
     
     const parse_game_gen = () => {
@@ -22,10 +26,21 @@ export default function StroopNamingGame() {
     }
 
     const check_if_correct = (option: string) => {
-        if (option == color){
-            return true;
+        if (option.toLowerCase() === color){
+            setScore(score+1);
+            console.log("Correct, Score = " + score);
         }
-        return false;
+        parse_game_gen();
+        return;
+    }
+
+    const startGame = () => {
+        parse_game_gen();
+        setTimerVisable(true);
+    }
+
+    const gameOver = () =>{
+        alert("Game Over! You Scored " + score + " Points!");
     }
 
     return (
@@ -33,18 +48,28 @@ export default function StroopNamingGame() {
             <GameHeader />
             <View style={styles.gameWrapper}>
                 <View style={styles.gameContainer}>
-                    <Text style={styles.carouselText}>ENTERWD STROOP NAMING GAME!</Text>
-                    <Text>{color_word}</Text>
-                    {options.map((option, index) => (
-                        <TouchableOpacity onPress={(option) => check_if_correct}>
-                            <Text key={index}>{option}</Text>
+                    <Text style={styles.carouselText}>STROOP NAMING GAME</Text>
+                    <Text style={[styles.gameText, { color: color }]}>{color_word}</Text>
+                    <View style={styles.optionRow}>
+                        <TouchableOpacity onPress={() => check_if_correct(options[0])}>
+                            <Text style={styles.gameText}>{options[0]}</Text>
                         </TouchableOpacity>
-                    ))}
-                    <Text>{options}</Text>
+                        <TouchableOpacity onPress={() => check_if_correct(options[1])}>
+                            <Text style={styles.gameText}>{options[1]}</Text>
+                        </TouchableOpacity>
+                        <TouchableOpacity onPress={() => check_if_correct(options[2])}>
+                            <Text style={styles.gameText}>{options[2]}</Text>
+                        </TouchableOpacity>
+                    </View>
                 </View>
-                <TouchableOpacity onPress={parse_game_gen}>
-                    <Text>generate game</Text>
-                </TouchableOpacity>
+                {!timerVisable && (
+                    <TouchableOpacity onPress={startGame}>
+                    <Text>Begin Game</Text>
+                    </TouchableOpacity>
+                )}
+                {timerVisable && (
+                    <GameTimer time={10} onTimeUp={() => gameOver()} />
+                )}
             </View>
         </View>
     );
@@ -71,70 +96,22 @@ const styles = StyleSheet.create({
         alignItems: "center",
         justifyContent: "space-between",
     },
-    completedContainer: {
-        width: "100%",
-        alignItems: "center",
-        justifyContent: "center",
-        flex: 1,
-    },
-    completedText: {
-        color: "white",
-        fontSize: 12,
-        textAlign: "center",
-        marginBottom: 20,
-        width: '80%',
-    },
-    completedIcon: {
-        marginBottom: 20,
-    },
-    resultsButton: {
-        backgroundColor: "white",
-        paddingVertical: 15,
-        paddingHorizontal: 30,
-        borderRadius: 30,
-    },
-    resultsButtonText: {
-        color: "#28C76F",
-        fontSize: 16,
-    },
     carouselText: {
         color: "white",
         fontSize: 18,
         textAlign: "center",
         marginBottom: 10,
     },
-    iconGrid: {
-        alignItems: "center",
+    optionRow: {
+        flexDirection: 'row',
+        justifyContent: 'space-between',
+        width: "100%",
+        marginBottom: 40,
     },
-    row: {
-        flexDirection: "row",
-        justifyContent: "center",
-        alignItems: "center",
+    gameText: {
+        fontSize: 25,
+        textAlign: "center",
         marginBottom: 10,
-    },
-    iconWrapper: {
-        width: 70,
-        height: 70,
-        justifyContent: "center",
-        alignItems: "center",
-    },
-    correctSelection: {
-        backgroundColor: "#25D366",
-        borderRadius: 10,
-    },
-    incorrectSelection: {
-        backgroundColor: "#E74C3C",
-        borderRadius: 10,
-    },
-    submitButton: {
-        backgroundColor: "#fff",
-        width: "80%",
-        paddingVertical: 15,
-        borderRadius: 30,
-        alignItems: "center",
-    },
-    submitButtonText: {
-        color: "#28C76F",
-        fontSize: 16,
-    },
+        fontWeight: 'bold',
+    }
 });
