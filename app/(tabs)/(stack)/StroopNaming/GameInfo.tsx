@@ -52,7 +52,7 @@ export default function StroopNamingGameInfo() {
   
           <TouchableOpacity
               style={styles.startButton}
-              onPress={() => router.push("/(tabs)/(stack)/MemoryCheck/TermsOfConditons")}
+              onPress={() => router.push("/(tabs)/(stack)/StroopNaming/TermsOfConditons")}
           >
             <Text style={styles.startButtonText}>Start Test</Text>
           </TouchableOpacity>

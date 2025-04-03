@@ -17,6 +17,6 @@ export const randomizeIcons = () => {
     ];
 };
 
-export const selectCorrectIcons = (iconsGrid) => {
+export const selectCorrectIcons = (iconsGrid: any) => {
     return [iconsGrid[0][0], iconsGrid[1][1]];
 };

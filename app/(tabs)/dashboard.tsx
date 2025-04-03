@@ -31,10 +31,10 @@ export default function ProfileScreen() {
 }
 
 const testItems = [
-  { text: "Memory Check", icon: "brain", route: "/(tabs)/(stack)/accuracy" },
-  { text: "Stroop Naming", icon: "font", route: "/(tabs)/(stack)/accuracy" },
-  { text: "Typing Challenge", icon: "keyboard", route: "/(tabs)/(stack)/accuracy" },
-  { text: "Walk and Turn", icon: "walking", route: "/(tabs)/(stack)/accuracy" },
+  { text: "Memory Check", icon: "brain", route: "/(tabs)/(stack)/MemoryCheck/GameInfo" },
+  { text: "Stroop Naming", icon: "font", route: "/(tabs)/(stack)/StroopNaming/GameInfo" },
+  { text: "Typing Challenge", icon: "keyboard", route: "/(tabs)/(stack)/TypingChallenge/GameInfo" },
+  { text: "Walk and Turn", icon: "walking", route: "/(tabs)/(stack)/WalkandTurn/GameInfo" },
   { text: "Choice Reaction", icon: "hand-paper", route: "/(tabs)/(stack)/accuracy" },
   { text: "Tongue Twisters", icon: "comment-dots", route: "/(tabs)/(stack)/accuracy" },
   { text: "Single Leg Balance", icon: "balance-scale", route: "/(tabs)/(stack)/accuracy" },

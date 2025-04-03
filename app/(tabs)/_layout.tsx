@@ -47,41 +47,6 @@ export default function TabLayout() {
                     ),
                 }}
             />
-            <Tabs.Screen
-                name="(stack)/TOC"
-                options={{
-                    tabBarButton: () => null,
-                    tabBarItemStyle: { display: "none" },
-                }}
-            />
-            <Tabs.Screen
-                name="(stack)/accuracy"
-                options={{
-                    tabBarButton: () => null,
-                    tabBarItemStyle: { display: "none" },
-                }}
-            />
-            <Tabs.Screen
-                name="(stack)/accuracygame"
-                options={{
-                    tabBarButton: () => null,
-                    tabBarItemStyle: { display: "none" },
-                }}
-            />
-            <Tabs.Screen
-                name="(stack)/memorycheckgame"
-                options={{
-                    tabBarButton: () => null,
-                    tabBarItemStyle: { display: "none" },
-                }}
-            />
-            <Tabs.Screen
-                name="(stack)/gameresult"
-                options={{
-                    tabBarButton: () => null,
-                    tabBarItemStyle: { display: "none" },
-                }}
-            />
         </Tabs>
     );
 }

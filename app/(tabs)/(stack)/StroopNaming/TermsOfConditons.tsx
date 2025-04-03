@@ -19,7 +19,7 @@ export default function TOCScreen() {
             </Text>
           </View>
           <View style={styles.infoBox}>
-            <Text style={styles.sectionTitle}>Terms of Service</Text>
+            <Text style={styles.sectionTitle}>Terms of Service OF STROOP NAMING</Text>
             <ScrollView style={styles.scrollContainer} contentContainerStyle={styles.scrollContent}>
               <Text style={styles.description}>
                 By using this application, you agree to the following terms:
@@ -37,7 +37,7 @@ export default function TOCScreen() {
             </ScrollView>
             <TouchableOpacity
                 style={styles.startButton}
-                onPress={() => router.push("/(tabs)/(stack)/MemoryCheck/memorycheckgame")}
+                onPress={() => router.push("/(tabs)/(stack)/StroopNaming/StroopNamingGame")}
             >
               <Text style={styles.startButtonText}>Begin</Text>
             </TouchableOpacity>
