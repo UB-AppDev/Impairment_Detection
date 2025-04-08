@@ -5,6 +5,8 @@ import { useLocalSearchParams, useRouter } from "expo-router";
 import GameHeader from "@/components/GameHeader";
 import { randomizeIcons, selectCorrectIcons } from "@/logic/Randomizer";
 import ProgressTracker from "@/components/ProgressTracker";
+import { getFirestore, doc, updateDoc, arrayUnion } from "firebase/firestore";
+import { auth } from "@/firebase/firebaseConfig";
 
 export default function MemoryCheckGame() {
     const router = useRouter();
@@ -18,6 +20,8 @@ export default function MemoryCheckGame() {
     const [showFeedback, setShowFeedback] = useState(false);
     const [buttonText, setButtonText] = useState("Submit");
     const [gameCompleted, setGameCompleted] = useState(false);
+    const [gameData, setGameData] = useState([]);
+    const db = getFirestore();
 
     useEffect(() => {
         setCorrectIcons(selectCorrectIcons(iconsGrid));
@@ -46,6 +50,7 @@ export default function MemoryCheckGame() {
             resetGame();
         } else {
             setGameCompleted(true);
+            saveResultsToFirebase();
         }
     };
 
@@ -61,10 +66,19 @@ export default function MemoryCheckGame() {
             return iconsGrid[row][col];
         });
 
-        const allCorrect =
-            correctIcons.length &&
-            selectedIcons.length === correctIcons.length &&
-            correctIcons.every((icon) => selectedIcons.includes(icon));
+        const passedIcons = correctIcons.filter(icon => selectedIcons.includes(icon));
+        const falseSelections = selectedIcons.filter(icon => !correctIcons.includes(icon));
+        const allCorrect = passedIcons.length === correctIcons.length && falseSelections.length === 0;
+
+        const result = {
+            question: currentStep + 1,
+            totalObjects: 9,
+            correctObjects: passedIcons.length,
+            falseObjects: falseSelections.length,
+            passed: allCorrect,
+        };
+
+        setGameData(prev => [...prev, result]);
 
         if (allCorrect) {
             setProgressStatus((prev) =>
@@ -75,10 +89,35 @@ export default function MemoryCheckGame() {
             setProgressStatus((prev) =>
                 prev.map((status, index) => (index === currentStep ? "failed" : status))
             );
-            setIncorrectSelections(selectedIcons.filter((icon) => !correctIcons.includes(icon)));
+            setIncorrectSelections(falseSelections);
             setShowFeedback(true);
             setButtonText("Proceed");
         }
+    };
+
+    const saveResultsToFirebase = async () => {
+        const user = auth.currentUser;
+        if (!user) return;
+
+        const totalQuestions = gameData.length;
+        const passedQuestions = gameData.filter(q => q.passed).length;
+        const averageCorrect = gameData.reduce((sum, q) => sum + q.correctObjects, 0) / totalQuestions;
+        const overallPassed = passedQuestions >= totalQuestions / 2;
+
+        const gameRecord = {
+            timestamp: new Date().toISOString(),
+            type: "Memory Check",
+            totalQuestions,
+            passedQuestions,
+            averageCorrect,
+            overallPassed,
+            questions: gameData
+        };
+
+        const userRef = doc(db, "users", user.uid);
+        await updateDoc(userRef, {
+            memoryCheckHistory: arrayUnion(gameRecord)
+        });
     };
 
     return (

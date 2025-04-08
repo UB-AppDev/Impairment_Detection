@@ -1,42 +1,75 @@
+import { useEffect, useState } from "react";
 import { View, Text, StyleSheet, TouchableOpacity } from "react-native";
 import { FontAwesome5 } from "@expo/vector-icons";
-import { useRouter, useLocalSearchParams } from "expo-router";
+import { useRouter } from "expo-router";
+import { getFirestore, doc, getDoc } from "firebase/firestore";
+import { auth } from "@/firebase/firebaseConfig";
 
 export default function GameResult() {
     const router = useRouter();
-    const params = useLocalSearchParams();
-    const progressStatus = Array.isArray(params.progressStatus) ? params.progressStatus : [];
+    const [latestResult, setLatestResult] = useState(null);
+    const db = getFirestore();
 
-    const totalQuestions = 4;
-    const correctAnswers = progressStatus.filter(status => status === "completed").length;
-    const passed = correctAnswers >= totalQuestions / 2;
+    useEffect(() => {
+        const fetchLatestResult = async () => {
+            const user = auth.currentUser;
+            if (!user) return;
+
+            const userRef = doc(db, "users", user.uid);
+            const userSnap = await getDoc(userRef);
+            if (userSnap.exists()) {
+                const data = userSnap.data();
+                const { memoryCheckHistory = [] } = data || {};
+                const history = Array.isArray(memoryCheckHistory) ? memoryCheckHistory : [];
+                const sorted = [...history].sort((a, b) => new Date(b.timestamp) - new Date(a.timestamp));
+                if (sorted.length > 0) {
+                    setLatestResult(sorted[0]);
+                }
+            }
+        };
+        fetchLatestResult();
+    }, []);
+
+    if (!latestResult) {
+        return (
+            <View style={styles.container}>
+                <Text>Loading...</Text>
+            </View>
+        );
+    }
+
+    const passed = latestResult.overallPassed;
+    const questions = latestResult.questions;
 
     return (
         <View style={styles.container}>
             <View style={[styles.resultBox, passed ? styles.passBox : styles.failBox]}>
                 <FontAwesome5 name={passed ? "smile" : "frown"} size={160} color="black" />
                 <Text style={styles.resultText}>
-                    {passed ? "You have passed the Item Accuracy Test!" : "You have failed the Item Accuracy Test!"}
+                    {passed ? "You have passed the Memory Check Test!" : "You have failed the Memory Check Test!"}
                 </Text>
             </View>
             <View style={styles.resultsContainer}>
-                {["1", "2", "3", "4"].map((num, index) => (
-                    <View key={num} style={styles.questionRow}>
+                {questions.map((q, index) => (
+                    <View key={index} style={styles.questionRow}>
                         <View style={styles.numberContainer}>
-                            <Text style={styles.questionNumber}>{num}</Text>
-                            <View style={[styles.statusTag,
-                                progressStatus[index] === "completed" ? styles.passTag : styles.failTag]}>
+                            <Text style={styles.questionNumber}>{q.question}</Text>
+                            <View style={[
+                                styles.statusTag,
+                                q.passed ? styles.passTag : styles.failTag
+                            ]}>
                                 <Text style={styles.statusText}>
-                                    {progressStatus[index] === "completed" ? "Passed" : "Failed"}
+                                    {q.passed ? "Passed" : "Failed"}
                                 </Text>
                             </View>
                         </View>
                         <View style={styles.questionDetails}>
-                            <Text style={styles.questionLabel}>Question {num}</Text>
+                            <Text style={styles.questionLabel}>Question {q.question}</Text>
                             <View style={styles.underline} />
                             <View style={styles.detailRow}>
-                                <Text style={styles.objectCount}>9 Objects</Text>
-                                <Text style={styles.identifiableItems}>2 Identifiable Items</Text>
+                                <Text style={styles.objectCount}>{q.totalObjects} Objects</Text>
+                                <Text style={styles.identifiableItems}>{q.correctObjects} Correct</Text>
+                                <Text style={styles.identifiableItems}>{q.falseObjects} Incorrect</Text>
                             </View>
                         </View>
                     </View>
@@ -157,3 +190,4 @@ const styles = StyleSheet.create({
         fontSize: 16,
     },
 });
+
