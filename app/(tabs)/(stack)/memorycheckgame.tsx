@@ -1,16 +1,17 @@
-import { useState, useEffect } from "react";
+import { useState, useEffect, useCallback } from "react";
 import { View, Text, StyleSheet, TouchableOpacity } from "react-native";
 import { FontAwesome5 } from "@expo/vector-icons";
-import { useLocalSearchParams, useRouter } from "expo-router";
+import { useFocusEffect, useRouter } from "expo-router";
 import GameHeader from "@/components/GameHeader";
 import { randomizeIcons, selectCorrectIcons } from "@/logic/Randomizer";
 import ProgressTracker from "@/components/ProgressTracker";
+import { getFirestore, doc, updateDoc, arrayUnion } from "firebase/firestore";
+import { auth } from "@/firebase/firebaseConfig";
 
 export default function MemoryCheckGame() {
     const router = useRouter();
-    const { correctIcons: passedCorrectIcons } = useLocalSearchParams();
     const [selectedItems, setSelectedItems] = useState([]);
-    const [iconsGrid, setIconsGrid] = useState(randomizeIcons());
+    const [iconsGrid, setIconsGrid] = useState([]);
     const [correctIcons, setCorrectIcons] = useState([]);
     const [currentStep, setCurrentStep] = useState(0);
     const [progressStatus, setProgressStatus] = useState(["inProgress", "inProgress", "inProgress", "inProgress"]);
@@ -18,10 +19,37 @@ export default function MemoryCheckGame() {
     const [showFeedback, setShowFeedback] = useState(false);
     const [buttonText, setButtonText] = useState("Submit");
     const [gameCompleted, setGameCompleted] = useState(false);
+    const [gameData, setGameData] = useState([]);
+    const [showAnswerScreen, setShowAnswerScreen] = useState(false);
+    const [showMemorizeScreen, setShowMemorizeScreen] = useState(true);
+    const db = getFirestore();
 
-    useEffect(() => {
-        setCorrectIcons(selectCorrectIcons(iconsGrid));
-    }, [iconsGrid]);
+    const generateNewIcons = () => {
+        const newGrid = randomizeIcons();
+        const newCorrectIcons = selectCorrectIcons(newGrid);
+        setIconsGrid(newGrid);
+        setCorrectIcons(newCorrectIcons);
+    };
+
+    const initializeGame = useCallback(() => {
+        generateNewIcons();
+        setSelectedItems([]);
+        setCurrentStep(0);
+        setProgressStatus(["inProgress", "inProgress", "inProgress", "inProgress"]);
+        setIncorrectSelections([]);
+        setShowFeedback(false);
+        setButtonText("Submit");
+        setGameCompleted(false);
+        setGameData([]);
+        setShowMemorizeScreen(true);
+        setShowAnswerScreen(false);
+    }, []);
+
+    useFocusEffect(
+        useCallback(() => {
+            initializeGame();
+        }, [initializeGame])
+    );
 
     const toggleSelection = (icon, index) => {
         if (!showFeedback) {
@@ -31,21 +59,19 @@ export default function MemoryCheckGame() {
         }
     };
 
-    const resetGame = () => {
-        setIconsGrid(randomizeIcons());
-        setSelectedItems([]);
-        setIncorrectSelections([]);
-        setShowFeedback(false);
-        setButtonText("Submit");
-        setCorrectIcons(selectCorrectIcons(iconsGrid));
-    };
-
     const handleProceed = () => {
         if (currentStep < 3) {
             setCurrentStep((prev) => prev + 1);
-            resetGame();
+            generateNewIcons();
+            setSelectedItems([]);
+            setIncorrectSelections([]);
+            setShowFeedback(false);
+            setButtonText("Submit");
+            setShowAnswerScreen(false);
+            setShowMemorizeScreen(true);
         } else {
             setGameCompleted(true);
+            saveResultsToFirebase();
         }
     };
 
@@ -61,24 +87,59 @@ export default function MemoryCheckGame() {
             return iconsGrid[row][col];
         });
 
-        const allCorrect =
-            correctIcons.length &&
-            selectedIcons.length === correctIcons.length &&
-            correctIcons.every((icon) => selectedIcons.includes(icon));
+        const passedIcons = correctIcons.filter(icon => selectedIcons.includes(icon));
+        const falseSelections = selectedIcons.filter(icon => !correctIcons.includes(icon));
+        const allCorrect = passedIcons.length === correctIcons.length && falseSelections.length === 0;
+
+        const result = {
+            question: currentStep + 1,
+            totalObjects: 9,
+            correctObjects: passedIcons.length,
+            falseObjects: falseSelections.length,
+            passed: allCorrect,
+        };
+
+        setGameData(prev => [...prev, result]);
 
         if (allCorrect) {
             setProgressStatus((prev) =>
                 prev.map((status, index) => (index === currentStep ? "completed" : status))
             );
-            handleProceed();
+            setShowAnswerScreen(true);
+            setButtonText("Proceed");
         } else {
             setProgressStatus((prev) =>
                 prev.map((status, index) => (index === currentStep ? "failed" : status))
             );
-            setIncorrectSelections(selectedIcons.filter((icon) => !correctIcons.includes(icon)));
+            setIncorrectSelections(falseSelections);
             setShowFeedback(true);
             setButtonText("Proceed");
         }
+    };
+
+    const saveResultsToFirebase = async () => {
+        const user = auth.currentUser;
+        if (!user) return;
+
+        const totalQuestions = gameData.length;
+        const passedQuestions = gameData.filter(q => q.passed).length;
+        const averageCorrect = gameData.reduce((sum, q) => sum + q.correctObjects, 0) / totalQuestions;
+        const overallPassed = passedQuestions >= totalQuestions / 2;
+
+        const gameRecord = {
+            timestamp: new Date().toISOString(),
+            type: "Memory Check",
+            totalQuestions,
+            passedQuestions,
+            averageCorrect,
+            overallPassed,
+            questions: gameData
+        };
+
+        const userRef = doc(db, "users", user.uid);
+        await updateDoc(userRef, {
+            memoryCheckHistory: arrayUnion(gameRecord)
+        });
     };
 
     return (
@@ -86,9 +147,8 @@ export default function MemoryCheckGame() {
             <GameHeader />
             <View style={styles.gameWrapper}>
                 <View style={styles.gameContainer}>
-                    <Text style={styles.carouselText}>Identify the items correctly!</Text>
                     {gameCompleted ? (
-                        <View style={styles.completedContainer}>
+                        <>
                             <Text style={styles.completedText}>
                                 You have completed the test, please proceed to see your results!
                             </Text>
@@ -96,9 +156,58 @@ export default function MemoryCheckGame() {
                             <TouchableOpacity style={styles.resultsButton} onPress={() => router.push("/(stack)/gameresult")}>
                                 <Text style={styles.resultsButtonText}>Proceed to Results</Text>
                             </TouchableOpacity>
-                        </View>
+                        </>
+                    ) : showMemorizeScreen ? (
+                        <>
+                            <Text style={styles.carouselText}>These are the icons to identify!</Text>
+                            <View style={styles.iconGrid}>
+                                {correctIcons.map((icon, index) => (
+                                    <View key={index} style={[styles.iconWrapper, styles.correctSelection]}>
+                                        <FontAwesome5 name={icon} size={50} color="white" />
+                                    </View>
+                                ))}
+                            </View>
+                            <TouchableOpacity style={styles.submitButton} onPress={() => setShowMemorizeScreen(false)}>
+                                <Text style={styles.submitButtonText}>Next</Text>
+                            </TouchableOpacity>
+                        </>
+                    ) : showAnswerScreen ? (
+                        <>
+                            <Text style={styles.carouselText}>Correct Answers:</Text>
+                            <View style={styles.iconGrid}>
+                                {iconsGrid.map((row, rowIndex) => (
+                                    <View key={rowIndex} style={styles.row}>
+                                        {row.map((icon, colIndex) => {
+                                            const index = rowIndex * 3 + colIndex;
+                                            const isCorrect = correctIcons.includes(icon);
+                                            const isIncorrect = incorrectSelections.includes(icon);
+                                            return (
+                                                <View
+                                                    key={index}
+                                                    style={[
+                                                        styles.iconWrapper,
+                                                        isCorrect && styles.correctSelection,
+                                                        isIncorrect && styles.incorrectSelection
+                                                    ]}
+                                                >
+                                                    <FontAwesome5
+                                                        name={icon}
+                                                        size={50}
+                                                        color={isCorrect || isIncorrect ? "white" : "black"}
+                                                    />
+                                                </View>
+                                            );
+                                        })}
+                                    </View>
+                                ))}
+                            </View>
+                            <TouchableOpacity style={styles.submitButton} onPress={handleProceed}>
+                                <Text style={styles.submitButtonText}>Continue</Text>
+                            </TouchableOpacity>
+                        </>
                     ) : (
                         <>
+                            <Text style={styles.carouselText}>Identify the items correctly!</Text>
                             <View style={styles.iconGrid}>
                                 {iconsGrid.map((row, rowIndex) => (
                                     <View key={rowIndex} style={styles.row}>
@@ -111,14 +220,14 @@ export default function MemoryCheckGame() {
                                                     style={[
                                                         styles.iconWrapper,
                                                         showFeedback && correctIcons.includes(icon) && styles.correctSelection,
-                                                        showFeedback && incorrectSelections.includes(icon) && styles.incorrectSelection,
+                                                        showFeedback && incorrectSelections.includes(icon) && styles.incorrectSelection
                                                     ]}
                                                 >
                                                     <FontAwesome5
                                                         name={icon}
                                                         size={50}
                                                         color={
-                                                            showFeedback && incorrectSelections.includes(icon)
+                                                            showFeedback && (correctIcons.includes(icon) || incorrectSelections.includes(icon))
                                                                 ? "white"
                                                                 : selectedItems.includes(index)
                                                                     ? "white"
@@ -162,13 +271,7 @@ const styles = StyleSheet.create({
         borderRadius: 12,
         padding: 20,
         alignItems: "center",
-        justifyContent: "space-between",
-    },
-    completedContainer: {
-        width: "100%",
-        alignItems: "center",
         justifyContent: "center",
-        flex: 1,
     },
     completedText: {
         color: "white",
@@ -210,14 +313,14 @@ const styles = StyleSheet.create({
         height: 70,
         justifyContent: "center",
         alignItems: "center",
+        borderRadius: 10,
+        margin: 5,
     },
     correctSelection: {
         backgroundColor: "#25D366",
-        borderRadius: 10,
     },
     incorrectSelection: {
         backgroundColor: "#E74C3C",
-        borderRadius: 10,
     },
     submitButton: {
         backgroundColor: "#fff",

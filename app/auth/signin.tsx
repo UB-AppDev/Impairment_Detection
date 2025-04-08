@@ -13,7 +13,7 @@ export default function SignIn() {
     const handleSignin = async () => {
         try {
             await signInWithEmailAndPassword(auth, email, password);
-            router.replace('/(tabs)/(stack)/dashboard');
+            router.replace('/dashboard');
         } catch (error: any) {
             Alert.alert('Login Failed', error.message);
         }
