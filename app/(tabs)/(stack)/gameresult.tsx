@@ -1,34 +1,23 @@
 import { useEffect, useState } from "react";
 import { View, Text, StyleSheet, TouchableOpacity } from "react-native";
 import { FontAwesome5 } from "@expo/vector-icons";
-import { useRouter } from "expo-router";
-import { getFirestore, doc, getDoc } from "firebase/firestore";
-import { auth } from "@/firebase/firebaseConfig";
+import { useRouter, useLocalSearchParams } from "expo-router";
 
 export default function GameResult() {
     const router = useRouter();
+    const { fromStats, game } = useLocalSearchParams();
     const [latestResult, setLatestResult] = useState(null);
-    const db = getFirestore();
 
     useEffect(() => {
-        const fetchLatestResult = async () => {
-            const user = auth.currentUser;
-            if (!user) return;
-
-            const userRef = doc(db, "users", user.uid);
-            const userSnap = await getDoc(userRef);
-            if (userSnap.exists()) {
-                const data = userSnap.data();
-                const { memoryCheckHistory = [] } = data || {};
-                const history = Array.isArray(memoryCheckHistory) ? memoryCheckHistory : [];
-                const sorted = [...history].sort((a, b) => new Date(b.timestamp) - new Date(a.timestamp));
-                if (sorted.length > 0) {
-                    setLatestResult(sorted[0]);
-                }
+        if (fromStats === "true" && typeof game === "string") {
+            try {
+                const parsed = JSON.parse(decodeURIComponent(game));
+                setLatestResult(parsed);
+            } catch (e) {
+                console.error("Failed to parse game param", e);
             }
-        };
-        fetchLatestResult();
-    }, []);
+        }
+    }, [fromStats, game]);
 
     if (!latestResult) {
         return (
@@ -54,13 +43,8 @@ export default function GameResult() {
                     <View key={index} style={styles.questionRow}>
                         <View style={styles.numberContainer}>
                             <Text style={styles.questionNumber}>{q.question}</Text>
-                            <View style={[
-                                styles.statusTag,
-                                q.passed ? styles.passTag : styles.failTag
-                            ]}>
-                                <Text style={styles.statusText}>
-                                    {q.passed ? "Passed" : "Failed"}
-                                </Text>
+                            <View style={[styles.statusTag, q.passed ? styles.passTag : styles.failTag]}>
+                                <Text style={styles.statusText}>{q.passed ? "Passed" : "Failed"}</Text>
                             </View>
                         </View>
                         <View style={styles.questionDetails}>
@@ -74,8 +58,10 @@ export default function GameResult() {
                         </View>
                     </View>
                 ))}
-                <TouchableOpacity style={styles.button} onPress={() => router.push("/dashboard")}>
-                    <Text style={styles.buttonText}>End Test</Text>
+                <TouchableOpacity style={styles.button} onPress={() => router.push("/statistics")}>
+                    <Text style={styles.buttonText}>
+                        {fromStats === "true" ? "Return to Statistics" : "End Test"}
+                    </Text>
                 </TouchableOpacity>
             </View>
         </View>
@@ -190,4 +176,3 @@ const styles = StyleSheet.create({
         fontSize: 16,
     },
 });
-
