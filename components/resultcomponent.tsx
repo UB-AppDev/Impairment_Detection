@@ -1,5 +1,6 @@
 import { View, Text, TouchableOpacity, StyleSheet } from 'react-native';
 import { FontAwesome5 } from '@expo/vector-icons';
+import { useRouter } from 'expo-router';
 
 const gameIcons = {
     "Memory Check": "brain",
@@ -18,6 +19,8 @@ export default function ResultComponent({ game, index }) {
     const date = dateObj.toLocaleDateString();
     const time = dateObj.toLocaleTimeString();
     const iconName = gameIcons[game.type] || "question";
+
+    const router = useRouter();
 
     return (
         <View style={styles.testCard}>
@@ -59,7 +62,15 @@ export default function ResultComponent({ game, index }) {
                         </View>
                     ))}
                 </View>
-                <TouchableOpacity>
+                <TouchableOpacity onPress={() =>
+                    router.push({
+                        pathname: "/gameresult",
+                        params: {
+                            fromStats: "true",
+                            game: encodeURIComponent(JSON.stringify(game)),
+                        },
+                    })
+                }>
                     <Text style={styles.moreDetails}>More Details</Text>
                 </TouchableOpacity>
             </View>
