@@ -37,7 +37,7 @@ const testItems = [
   { text: "Walk and Turn", icon: "walking", route: "/(tabs)/(stack)/WalkandTurn/GameInfo" },
   { text: "Choice Reaction", icon: "hand-paper", route: "/(tabs)/(stack)/accuracy" },
   { text: "Tongue Twisters", icon: "comment-dots", route: "/(tabs)/(stack)/accuracy" },
-  { text: "Single Leg Balance", icon: "balance-scale", route: "/(tabs)/(stack)/accuracy" },
+  { text: "Single Leg Balance", icon: "balance-scale", route: "/(tabs)/(stack)/LegBalance/GameInfo" },
   { text: "Visual Pursuit", icon: "eye", route: "/(tabs)/(stack)/accuracy" }
 ];
 

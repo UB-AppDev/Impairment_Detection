@@ -10,6 +10,10 @@ export default function GamesLayout() {
             <Stack.Screen name="StroopNaming/GameInfo" />
             <Stack.Screen name="StroopNaming/TermsOfConditions" />
             <Stack.Screen name="StroopNaming/StroopNamingGame" />
+
+            <Stack.Screen name="LegBalance/GameInfo" />
+            <Stack.Screen name="LegBalance/TermsOfConditions" />
+            <Stack.Screen name="LegBalance/SingleLegBalanceGame" />
             
 
         </Stack>

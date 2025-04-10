@@ -1,76 +1,89 @@
-import React, { useState, useEffect } from "react";
-import { View, Text, StyleSheet, TouchableOpacity, Button } from "react-native";
-import { FontAwesome5 } from "@expo/vector-icons";
-import { useLocalSearchParams, useRouter } from "expo-router";
+import React, { useState } from "react";
+import { View, Text, StyleSheet, TouchableOpacity } from "react-native";
 import GameHeader from "@/components/GameHeader";
-import {StroopGameGen} from "@/logic/StroopGameGen";
-import ProgressTracker from "@/components/ProgressTracker";
+import { StroopGameGen } from "@/logic/StroopGameGen";
+import StroopBrick from "@/components/StroopBrick";
 import { GameTimer } from "@/components/GameTimer";
-import { setOptions } from "expo-splash-screen";
+import { router, useRouter } from "expo-router";
 
 export default function StroopNamingGame() {
     const router = useRouter();
     const [color, setColor] = useState("");
     const [color_word, setColorWord] = useState("");
     const [options, setGameOptions] = useState<string[]>([]);
-    const [score, setScore] = useState(1);
-    const [timerVisable, setTimerVisable] = useState(false);
-    
+    const [score, setScore] = useState(0);
+    const [gameStarted, setGameStarted] = useState(false); // Track if game has started
+    const [finalScore, setFinalScore] = useState(0);
+    const [gameDuration] = useState(30); // Set the game duration in seconds
 
-    
     const parse_game_gen = () => {
-        var game_info = StroopGameGen();
+        const game_info = StroopGameGen();
         setColor(game_info.word_color);
         setColorWord(game_info.word);
         setGameOptions(game_info.options);
-    }
+    };
 
     const check_if_correct = (option: string) => {
-        if (option.toLowerCase() === color){
-            setScore(score+1);
+        if (option.toLowerCase() === color) {
+            setScore(score + 1);
             console.log("Correct, Score = " + score);
         }
         parse_game_gen();
-        return;
-    }
+    };
 
     const startGame = () => {
         parse_game_gen();
-        setTimerVisable(true);
-    }
+        setGameStarted(true); // Game has started
+    };
 
-    const gameOver = () =>{
-        alert("Game Over! You Scored " + score + " Points!");
-    }
+    const gameOver = () => {
+        setFinalScore(score);
+        alert("Game Over! You Scored " + finalScore + " Points!");
+        // Reset the game state after the alert is dismissed
+        setTimeout(() => {
+            setGameStarted(false); // Reset game state
+            setScore(0); // Reset score
+        }, 0); // Delay to allow alert to be dismissed first
+    };
+
 
     return (
         <View style={styles.screenContainer}>
             <GameHeader />
             <View style={styles.gameWrapper}>
                 <View style={styles.gameContainer}>
-                    <Text style={styles.carouselText}>STROOP NAMING GAME</Text>
-                    <Text style={[styles.gameText, { color: color }]}>{color_word}</Text>
-                    <View style={styles.optionRow}>
-                        <TouchableOpacity onPress={() => check_if_correct(options[0])}>
-                            <Text style={styles.gameText}>{options[0]}</Text>
-                        </TouchableOpacity>
-                        <TouchableOpacity onPress={() => check_if_correct(options[1])}>
-                            <Text style={styles.gameText}>{options[1]}</Text>
-                        </TouchableOpacity>
-                        <TouchableOpacity onPress={() => check_if_correct(options[2])}>
-                            <Text style={styles.gameText}>{options[2]}</Text>
-                        </TouchableOpacity>
-                    </View>
+                    {gameStarted && (
+                        <>
+                            <View style={styles.mainBrickWrapper}>
+                                <StroopBrick color="#D3D3D3" text={color_word} textColor={color} />
+                            </View>
+
+                            <View style={styles.optionRow}>
+                                {options.map((opt, i) => (
+                                    <TouchableOpacity key={i} onPress={() => check_if_correct(opt)}>
+                                        <StroopBrick color={opt.toLowerCase()} text={opt} textColor="white" />
+                                    </TouchableOpacity>
+                                ))}
+                            </View>
+                        
+                        </>
+                    )}
                 </View>
-                {!timerVisable && (
-                    <TouchableOpacity onPress={startGame}>
-                    <Text>Begin Game</Text>
-                    </TouchableOpacity>
-                )}
-                {timerVisable && (
-                    <GameTimer time={30} onTimeUp={() => gameOver()} />
-                )}
             </View>
+
+            {!gameStarted && (
+                <TouchableOpacity onPress={startGame} style={styles.startButton}>
+                    <Text style={styles.startButtonText}>Begin Game</Text>
+                </TouchableOpacity>
+            )}
+
+            {/* Stop button to end the game */}
+            {gameStarted && (
+                <GameTimer time={gameDuration} onTimeUp={gameOver} />
+                // <TouchableOpacity onPress={gameOver}>
+                //     <Text>STOP</Text>
+                // </TouchableOpacity>
+            )}
         </View>
     );
 }
@@ -90,28 +103,41 @@ const styles = StyleSheet.create({
     gameContainer: {
         backgroundColor: "#28C76F",
         width: "100%",
-        flex: 0.85,
+        flex: 0.55,
         borderRadius: 12,
-        padding: 20,
+        paddingVertical: 30,
+        paddingHorizontal: 20,
         alignItems: "center",
-        justifyContent: "space-between",
     },
-    carouselText: {
-        color: "white",
-        fontSize: 18,
-        textAlign: "center",
-        marginBottom: 10,
+
+    mainBrickWrapper: {
+        marginVertical: 20,
+        alignItems: "center",
     },
     optionRow: {
-        flexDirection: 'row',
-        justifyContent: 'space-between',
+        flexDirection: "row",
+        justifyContent: "center", // Center the items horizontally
+        alignItems: "center", // Ensure the items are aligned vertically in the center
         width: "100%",
-        marginBottom: 40,
+        gap: 10,
+        marginTop: 10,
     },
-    gameText: {
-        fontSize: 25,
-        textAlign: "center",
-        marginBottom: 10,
-        fontWeight: 'bold',
-    }
+
+    startText: {
+        fontSize: 20,
+        color: "white",
+        marginTop: 20,
+    },
+    startButton: {
+        backgroundColor: "#25D366",
+        width: "100%",
+        paddingVertical: 15,
+        borderRadius: 30,
+        alignItems: "center",
+        marginTop: 20,
+      },
+      startButtonText: {
+        color: "#fff",
+        fontSize: 14,
+      },
 });

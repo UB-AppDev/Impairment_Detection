@@ -1,16 +1,13 @@
-import { View, Text, Image, StyleSheet, TouchableOpacity , Dimensions } from "react-native";
+import { View, Text, Image, StyleSheet, TouchableOpacity } from "react-native";
 import { useRouter } from "expo-router";
 import { Ionicons } from "@expo/vector-icons";
-import StroopBrick from "@/components/StroopBrick";
-
 
 export default function StroopNamingGameInfo() {
-
     const router = useRouter();
     return (
         <View style={styles.screenContainer}>
           <View style={styles.header}>
-            <Ionicons name="person-circle-outline" size={50} color="black"/>
+            <Ionicons name="person-circle-outline" size={50} color="black" />
             <View>
               <Text style={styles.headerTitle}>John Doe</Text>
               <Text style={styles.headerSubtitle}>Doctor of Psychology</Text>
@@ -18,7 +15,7 @@ export default function StroopNamingGameInfo() {
           </View>
   
           <View style={styles.carouselBox}>
-            <StroopBrick color="#D3D3D3" text="GRAY" textColor="blue"  />
+                <Text style={styles.stroopedText}>RED</Text>
             <Text style={styles.carouselText}>
                 This test requires you to tap the screen
             </Text>
@@ -30,7 +27,7 @@ export default function StroopNamingGameInfo() {
           </View>
   
           <View style={styles.infoBox}>
-            <Text style={styles.sectionTitle}>Stroop Naming</Text>
+            <Text style={styles.sectionTitle}>SINGLE LEG BALANCE GAME</Text>
             <Text style={styles.description}>
                 A word will appear at the top of the screen, with three answer choices at the bottom. Choose the answer choice that matching the color of the word, not what the text says.
             </Text>
@@ -55,7 +52,7 @@ export default function StroopNamingGameInfo() {
   
           <TouchableOpacity
               style={styles.startButton}
-              onPress={() => router.push("/(tabs)/(stack)/StroopNaming/TermsOfConditons")}
+              onPress={() => router.push("/(tabs)/(stack)/LegBalance/TermsOfConditons")}
           >
             <Text style={styles.startButtonText}>Start Test</Text>
           </TouchableOpacity>
