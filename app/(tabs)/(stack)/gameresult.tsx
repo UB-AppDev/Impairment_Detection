@@ -1,48 +1,67 @@
+import { useEffect, useState } from "react";
 import { View, Text, StyleSheet, TouchableOpacity } from "react-native";
 import { FontAwesome5 } from "@expo/vector-icons";
 import { useRouter, useLocalSearchParams } from "expo-router";
 
 export default function GameResult() {
     const router = useRouter();
-    const params = useLocalSearchParams();
-    const progressStatus = Array.isArray(params.progressStatus) ? params.progressStatus : [];
+    const { fromStats, game } = useLocalSearchParams();
+    const [latestResult, setLatestResult] = useState(null);
 
-    const totalQuestions = 4;
-    const correctAnswers = progressStatus.filter(status => status === "completed").length;
-    const passed = correctAnswers >= totalQuestions / 2;
+    useEffect(() => {
+        if (fromStats === "true" && typeof game === "string") {
+            try {
+                const parsed = JSON.parse(decodeURIComponent(game));
+                setLatestResult(parsed);
+            } catch (e) {
+                console.error("Failed to parse game param", e);
+            }
+        }
+    }, [fromStats, game]);
+
+    if (!latestResult) {
+        return (
+            <View style={styles.container}>
+                <Text>Loading...</Text>
+            </View>
+        );
+    }
+
+    const passed = latestResult.overallPassed;
+    const questions = latestResult.questions;
 
     return (
         <View style={styles.container}>
             <View style={[styles.resultBox, passed ? styles.passBox : styles.failBox]}>
                 <FontAwesome5 name={passed ? "smile" : "frown"} size={160} color="black" />
                 <Text style={styles.resultText}>
-                    {passed ? "You have passed the Item Accuracy Test!" : "You have failed the Item Accuracy Test!"}
+                    {passed ? "You have passed the Memory Check Test!" : "You have failed the Memory Check Test!"}
                 </Text>
             </View>
             <View style={styles.resultsContainer}>
-                {["1", "2", "3", "4"].map((num, index) => (
-                    <View key={num} style={styles.questionRow}>
+                {questions.map((q, index) => (
+                    <View key={index} style={styles.questionRow}>
                         <View style={styles.numberContainer}>
-                            <Text style={styles.questionNumber}>{num}</Text>
-                            <View style={[styles.statusTag,
-                                progressStatus[index] === "completed" ? styles.passTag : styles.failTag]}>
-                                <Text style={styles.statusText}>
-                                    {progressStatus[index] === "completed" ? "Passed" : "Failed"}
-                                </Text>
+                            <Text style={styles.questionNumber}>{q.question}</Text>
+                            <View style={[styles.statusTag, q.passed ? styles.passTag : styles.failTag]}>
+                                <Text style={styles.statusText}>{q.passed ? "Passed" : "Failed"}</Text>
                             </View>
                         </View>
                         <View style={styles.questionDetails}>
-                            <Text style={styles.questionLabel}>Question {num}</Text>
+                            <Text style={styles.questionLabel}>Question {q.question}</Text>
                             <View style={styles.underline} />
                             <View style={styles.detailRow}>
-                                <Text style={styles.objectCount}>9 Objects</Text>
-                                <Text style={styles.identifiableItems}>2 Identifiable Items</Text>
+                                <Text style={styles.objectCount}>{q.totalObjects} Objects</Text>
+                                <Text style={styles.identifiableItems}>{q.correctObjects} Correct</Text>
+                                <Text style={styles.identifiableItems}>{q.falseObjects} Incorrect</Text>
                             </View>
                         </View>
                     </View>
                 ))}
-                <TouchableOpacity style={styles.button} onPress={() => router.push("/dashboard")}>
-                    <Text style={styles.buttonText}>End Test</Text>
+                <TouchableOpacity style={styles.button} onPress={() => router.push("/statistics")}>
+                    <Text style={styles.buttonText}>
+                        {fromStats === "true" ? "Return to Statistics" : "End Test"}
+                    </Text>
                 </TouchableOpacity>
             </View>
         </View>
