@@ -1,15 +1,16 @@
 import React from 'react';
-import { View, StyleSheet, ViewStyle } from 'react-native';
+import { View, Text, StyleSheet, Image } from 'react-native';
 
 interface SquircleProps {
-  children?: React.ReactNode;
-  style?: ViewStyle;
+  imageUri: string;
+  text: string;
 }
 
-export function Squircle({ children, style }: SquircleProps) {
+export function Squircle({ imageUri, text }: SquircleProps) {
   return (
-    <View style={[styles.container, style]}>
-      {children}
+    <View style={styles.container}>
+      <Image source={{ uri: imageUri }} style={styles.image} />
+      <Text style={styles.text}>{text}</Text>
     </View>
   );
 }

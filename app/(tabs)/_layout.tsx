@@ -57,6 +57,13 @@ export default function TabLayout() {
                     ),
                 }}
             />
+            <Tabs.Screen
+                name="tonguetwisteronboard/tonguetwisteronboard"
+                options={{
+                    tabBarButton: () => null,
+                    tabBarItemStyle: { display: "none" },
+                }}
+            />
         </Tabs>
     );
 }

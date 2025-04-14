@@ -16,7 +16,7 @@ export default function SignIn() {
         return;
         try {
             await signInWithEmailAndPassword(auth, email, password);
-            router.replace('/(tabs)/dashboard');
+            router.replace('/dashboard');
         } catch (error: any) {
             Alert.alert('Login Failed', error.message);
         }
