@@ -48,38 +48,13 @@ export default function TabLayout() {
                 }}
             />
             <Tabs.Screen
-                name="(stack)/TOC"
+                name="(stack)"
                 options={{
-                    tabBarButton: () => null,
-                    tabBarItemStyle: { display: "none" },
-                }}
-            />
-            <Tabs.Screen
-                name="(stack)/accuracy"
-                options={{
-                    tabBarButton: () => null,
-                    tabBarItemStyle: { display: "none" },
-                }}
-            />
-            <Tabs.Screen
-                name="(stack)/accuracygame"
-                options={{
-                    tabBarButton: () => null,
-                    tabBarItemStyle: { display: "none" },
-                }}
-            />
-            <Tabs.Screen
-                name="(stack)/memorycheckgame"
-                options={{
-                    tabBarButton: () => null,
-                    tabBarItemStyle: { display: "none" },
-                }}
-            />
-            <Tabs.Screen
-                name="(stack)/gameresult"
-                options={{
-                    tabBarButton: () => null,
-                    tabBarItemStyle: { display: "none" },
+                    title: "games",
+                    headerShown: false, // Ensure header is disabled
+                    tabBarIcon: ({ focused, color }) => (
+                        <Ionicons name="game-controller-outline" size={24} color={focused ? activeColor : color} />
+                    ),
                 }}
             />
             <Tabs.Screen

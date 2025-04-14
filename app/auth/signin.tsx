@@ -11,6 +11,9 @@ export default function SignIn() {
     const router = useRouter();
 
     const handleSignin = async () => {
+        // for pure testing no need for sign in
+        router.replace('/(tabs)/dashboard');
+        return;
         try {
             await signInWithEmailAndPassword(auth, email, password);
             router.replace('/dashboard');

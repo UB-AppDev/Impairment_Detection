@@ -52,7 +52,7 @@ export default function AccuracyScreen() {
             </View>
             <TouchableOpacity
                 style={styles.startButton}
-                onPress={() => router.push("/(tabs)/(stack)/TOC")}
+                onPress={() => router.push("/(tabs)/(stack)/MemoryCheck/TermsOfConditons")}
             >
               <Text style={styles.startButtonText}>Start Test</Text>
             </TouchableOpacity>
