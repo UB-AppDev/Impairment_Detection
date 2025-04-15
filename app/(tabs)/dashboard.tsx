@@ -31,7 +31,7 @@ export default function ProfileScreen() {
 }
 
 const testItems = [
-  { text: "Memory Check", icon: "brain", route: "/(tabs)/(stack)/MemoryCheck/GameInfo" },
+  { text: "Memory Check", icon: "brain", route: "/(tabs)/(stack)/accuracy" },
   { text: "Stroop Naming", icon: "font", route: "/(tabs)/(stack)/StroopNaming/GameInfo" },
   { text: "Typing Challenge", icon: "keyboard", route: "/(tabs)/(stack)/TypingChallenge/GameInfo" },
   { text: "Walk and Turn", icon: "walking", route: "/(tabs)/(stack)/WalkandTurn/GameInfo" },
