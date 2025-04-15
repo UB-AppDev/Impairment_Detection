@@ -31,34 +31,26 @@ export default function ProfileScreen() {
 }
 
 const testItems = [
-  { text: "Memory Check", icon: "brain", route: "/(tabs)/(stack)/accuracy" },
-  { text: "Stroop Naming", icon: "font", route: "/(tabs)/(stack)/StroopNaming/GameInfo" },
-  { text: "Typing Challenge", icon: "keyboard", route: "/(tabs)/(stack)/TypingChallenge/GameInfo" },
-  { text: "Walk and Turn", icon: "walking", route: "/(tabs)/(stack)/WalkandTurn/GameInfo" },
-  { text: "Choice Reaction", icon: "hand-paper", route: "/(tabs)/(stack)/accuracy" },
-  { text: "Single Leg Balance", icon: "balance-scale", route: "/(tabs)/(stack)/LegBalance/GameInfo" },
-  { text: "Tongue Twisters", icon: "comment-dots", route: "/(tabs)/(stack)/TongueTwister/GameInfo" },
-  { text: "Visual Pursuit", icon: "eye", route: "/(tabs)/(stack)/accuracy" }
+  { text: "Memory Check", icon: "brain", route: "/(tabs)/(stack)/GameInfo?game=memory-check" },
+  { text: "Stroop Naming", icon: "font", route: "/(tabs)/(stack)/GameInfo?game=stroop-naming" },
+  { text: "Typing Challenge", icon: "keyboard", route: "/(tabs)/(stack)/GameInfo?game=typing-challenge" },
+  { text: "Walk and Turn", icon: "walking", route: "/(tabs)/(stack)/GameInfo?game=walk-turn" },
+  { text: "Choice Reaction", icon: "hand-paper", route: "/(tabs)/(stack)/GameInfo?game=choice-reaction" },
+  { text: "Single Leg Balance", icon: "balance-scale", route: "/(tabs)/(stack)/GameInfo?game=leg-balance" },
+  { text: "Tongue Twisters", icon: "comment-dots", route: "/(tabs)/(stack)/GameInfo?game=tongue-twister" },
+  { text: "Visual Pursuit", icon: "eye", route: "/(tabs)/(stack)/GameInfo?game=visual-pursuit" }
 ];
 
 const styles = StyleSheet.create({
-  screenContainer: {
-    flex: 1,
-    backgroundColor: '#fff',
-  },
-  scrollContent: {
-    padding: 20,
-  },
+  screenContainer: { flex: 1, backgroundColor: '#fff' },
+  scrollContent: { padding: 20 },
   squircleContainer: {
     flexDirection: 'row',
     flexWrap: 'wrap',
     justifyContent: 'center',
     marginTop: 10,
   },
-  squircleItem: {
-    margin: 10,
-    alignItems: 'center',
-  },
+  squircleItem: { margin: 10, alignItems: 'center' },
   squircleBox: {
     backgroundColor: '#fff',
     borderRadius: 20,
