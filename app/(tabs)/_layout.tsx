@@ -50,16 +50,6 @@ export default function TabLayout() {
             <Tabs.Screen
                 name="(stack)"
                 options={{
-                    title: "games",
-                    headerShown: false, // Ensure header is disabled
-                    tabBarIcon: ({ focused, color }) => (
-                        <Ionicons name="game-controller-outline" size={24} color={focused ? activeColor : color} />
-                    ),
-                }}
-            />
-            <Tabs.Screen
-                name="tonguetwisteronboard/tonguetwisteronboard"
-                options={{
                     tabBarButton: () => null,
                     tabBarItemStyle: { display: "none" },
                 }}
