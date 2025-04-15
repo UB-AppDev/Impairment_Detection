@@ -14,6 +14,9 @@ export default function GamesLayout() {
             <Stack.Screen name="LegBalance/GameInfo" />
             <Stack.Screen name="LegBalance/TermsOfConditions" />
             <Stack.Screen name="LegBalance/SingleLegBalanceGame" />
+
+            <Stack.Screen name="TongueTwister/GameInfo" />
+            <Stack.Screen name="TongueTwister/tonguetwister" />
             
 
         </Stack>

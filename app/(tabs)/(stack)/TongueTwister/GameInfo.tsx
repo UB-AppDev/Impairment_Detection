@@ -3,7 +3,7 @@ import { Ionicons } from "@expo/vector-icons";
 import { useRouter } from "expo-router";
 import DashboardHeader from "@/components/DashboardHeader";
 
-export default function TongueTwisterOnboard() {
+export default function GameInfo() {
     const router = useRouter();
 
     return (
