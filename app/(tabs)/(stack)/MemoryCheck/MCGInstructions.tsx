@@ -23,7 +23,7 @@ export default function AccuracyScreen() {
             </View>
             <TouchableOpacity
                 style={styles.startButton}
-                onPress={() => router.push({ pathname: "/(tabs)/(stack)/memorycheckgame", params: { correctIcons } })}
+                onPress={() => router.push({ pathname: "/(tabs)/(stack)/MemoryCheck/MemoryCheckGame", params: { correctIcons } })}
             >
               <Text style={styles.startButtonText}>Proceed</Text>
             </TouchableOpacity>

@@ -16,7 +16,7 @@ export default function FirstAndLastName() {
             Alert.alert('Error', 'User not logged in.');
             return;
         }
-
+        // there is an issue with this, 
         try {
             const userRef = doc(db, 'users', user.uid);
             await setDoc(userRef, { firstName, lastName }, { merge: true });
