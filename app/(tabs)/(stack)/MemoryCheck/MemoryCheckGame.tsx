@@ -1,12 +1,14 @@
-import { useState, useEffect, useCallback } from "react";
-import { View, Text, StyleSheet, TouchableOpacity } from "react-native";
+import { View, Text, StyleSheet, TouchableOpacity, Dimensions } from "react-native";
 import { FontAwesome5 } from "@expo/vector-icons";
+import { useState, useEffect, useCallback } from "react";
 import { useFocusEffect, useRouter } from "expo-router";
 import GameHeader from "@/components/GameHeader";
-import { randomizeIcons, selectCorrectIcons } from "@/logic/Randomizer";
 import ProgressTracker from "@/components/ProgressTracker";
+import { randomizeIcons, selectCorrectIcons } from "@/logic/Randomizer";
 import { getFirestore, doc, updateDoc, arrayUnion } from "firebase/firestore";
 import { auth } from "@/firebase/firebaseConfig";
+
+const { width, height } = Dimensions.get("window");
 
 export default function MemoryCheckGame() {
     const router = useRouter();
@@ -152,7 +154,7 @@ export default function MemoryCheckGame() {
                             <Text style={styles.completedText}>
                                 You have completed the test, please proceed to see your results!
                             </Text>
-                            <FontAwesome5 name="chart-bar" size={80} color="black" style={styles.completedIcon} />
+                            <FontAwesome5 name="chart-bar" size={width * 0.2} color="black" style={styles.completedIcon} />
                             <TouchableOpacity style={styles.resultsButton} onPress={() => router.push("/(stack)/gameresult")}>
                                 <Text style={styles.resultsButtonText}>Proceed to Results</Text>
                             </TouchableOpacity>
@@ -163,7 +165,7 @@ export default function MemoryCheckGame() {
                             <View style={styles.iconGrid}>
                                 {correctIcons.map((icon, index) => (
                                     <View key={index} style={[styles.iconWrapper, styles.correctSelection]}>
-                                        <FontAwesome5 name={icon} size={50} color="white" />
+                                        <FontAwesome5 name={icon} size={width * 0.12} color="white" />
                                     </View>
                                 ))}
                             </View>
@@ -187,12 +189,12 @@ export default function MemoryCheckGame() {
                                                     style={[
                                                         styles.iconWrapper,
                                                         isCorrect && styles.correctSelection,
-                                                        isIncorrect && styles.incorrectSelection
+                                                        isIncorrect && styles.incorrectSelection,
                                                     ]}
                                                 >
                                                     <FontAwesome5
                                                         name={icon}
-                                                        size={50}
+                                                        size={width * 0.12}
                                                         color={isCorrect || isIncorrect ? "white" : "black"}
                                                     />
                                                 </View>
@@ -220,12 +222,12 @@ export default function MemoryCheckGame() {
                                                     style={[
                                                         styles.iconWrapper,
                                                         showFeedback && correctIcons.includes(icon) && styles.correctSelection,
-                                                        showFeedback && incorrectSelections.includes(icon) && styles.incorrectSelection
+                                                        showFeedback && incorrectSelections.includes(icon) && styles.incorrectSelection,
                                                     ]}
                                                 >
                                                     <FontAwesome5
                                                         name={icon}
-                                                        size={50}
+                                                        size={width * 0.12}
                                                         color={
                                                             showFeedback && (correctIcons.includes(icon) || incorrectSelections.includes(icon))
                                                                 ? "white"
@@ -257,7 +259,8 @@ const styles = StyleSheet.create({
         flex: 1,
         backgroundColor: "#fff",
         alignItems: "center",
-        padding: 20,
+        paddingVertical: height * 0.05,
+        paddingHorizontal: width * 0.05,
     },
     gameWrapper: {
         flex: 0.9,
@@ -269,35 +272,35 @@ const styles = StyleSheet.create({
         width: "100%",
         flex: 0.85,
         borderRadius: 12,
-        padding: 20,
+        padding: width * 0.05,
         alignItems: "center",
         justifyContent: "center",
     },
     completedText: {
         color: "white",
-        fontSize: 12,
+        fontSize: width * 0.035,
         textAlign: "center",
-        marginBottom: 20,
-        width: '80%',
+        marginBottom: height * 0.025,
+        width: "80%",
     },
     completedIcon: {
-        marginBottom: 20,
+        marginBottom: height * 0.025,
     },
     resultsButton: {
         backgroundColor: "white",
-        paddingVertical: 15,
-        paddingHorizontal: 30,
+        paddingVertical: height * 0.02,
+        paddingHorizontal: width * 0.1,
         borderRadius: 30,
     },
     resultsButtonText: {
         color: "#28C76F",
-        fontSize: 16,
+        fontSize: width * 0.045,
     },
     carouselText: {
         color: "white",
-        fontSize: 18,
+        fontSize: width * 0.045,
         textAlign: "center",
-        marginBottom: 10,
+        marginBottom: height * 0.015,
     },
     iconGrid: {
         alignItems: "center",
@@ -306,15 +309,15 @@ const styles = StyleSheet.create({
         flexDirection: "row",
         justifyContent: "center",
         alignItems: "center",
-        marginBottom: 10,
+        marginBottom: height * 0.015,
     },
     iconWrapper: {
-        width: 70,
-        height: 70,
+        width: width * 0.18,
+        height: width * 0.18,
         justifyContent: "center",
         alignItems: "center",
         borderRadius: 10,
-        margin: 5,
+        margin: width * 0.01,
     },
     correctSelection: {
         backgroundColor: "#25D366",
@@ -325,12 +328,13 @@ const styles = StyleSheet.create({
     submitButton: {
         backgroundColor: "#fff",
         width: "80%",
-        paddingVertical: 15,
+        paddingVertical: height * 0.02,
         borderRadius: 30,
         alignItems: "center",
+        marginTop: height * 0.02,
     },
     submitButtonText: {
         color: "#28C76F",
-        fontSize: 16,
+        fontSize: width * 0.045,
     },
 });
