@@ -272,12 +272,14 @@ const styles = StyleSheet.create({
         fontSize: width * 0.045,
         textAlign: "center",
         marginBottom: height * 0.015,
+        width: "90%",
     },
     twisterText: {
         color: "white",
-        fontSize: width * 0.05,
+        fontSize: width * 0.045,
         textAlign: "center",
         marginBottom: height * 0.03,
+        width: "90%",
     },
     micButton: {
         backgroundColor: "black",
@@ -320,13 +322,15 @@ const styles = StyleSheet.create({
     },
     reviewLabel: {
         color: "white",
-        fontSize: width * 0.04,
-        marginTop: height * 0.02,
+        fontSize: width * 0.025,
+        marginTop: height * 0.015,
+        textAlign: "center",
     },
     reviewText: {
         color: "#fff",
-        fontSize: width * 0.05,
+        fontSize: width * 0.025,
         textAlign: "center",
-        marginTop: height * 0.01,
+        marginTop: height * 0.008,
+        width: "90%",
     },
 });
