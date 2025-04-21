@@ -153,10 +153,8 @@ export default function TongueTwisterGame() {
         setSound(newSound);
     };
 
-    const simulateTranscription = () => {
-        setTimeout(() => {
-            setTranscribedText(tongueTwisters[currentStep]);
-        }, 1000);
+    const simulateTranscription = async () => {
+        setTranscribedText(tongueTwisters[currentStep]);
     };
 
     return (
