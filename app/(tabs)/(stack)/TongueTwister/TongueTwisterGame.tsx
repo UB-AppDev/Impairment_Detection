@@ -95,14 +95,26 @@ export default function TongueTwisterGame() {
 
     const handleSubmit = () => {
         const durationSeconds = Math.floor(recordingDuration / 1000);
+        const expected = tongueTwisters[currentStep].toLowerCase().trim();
+        const actual = transcribedText.toLowerCase().trim();
+        const passed = durationSeconds >= 1 && expected === actual;
+
         const result = {
             question: currentStep + 1,
             duration: durationSeconds,
-            passed: durationSeconds >= 1,
+            passed,
             prompt: tongueTwisters[currentStep],
             uri: recordingUri
         };
+
         setGameData(prev => [...prev, result]);
+
+        setProgressStatus(prev =>
+            prev.map((status, index) =>
+                index === currentStep ? (passed ? "completed" : "failed") : status
+            )
+        );
+
         setShowReviewScreen(true);
         simulateTranscription();
     };
