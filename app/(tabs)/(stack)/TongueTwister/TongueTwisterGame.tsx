@@ -217,7 +217,9 @@ export default function TongueTwisterGame() {
                             <TouchableOpacity onPress={playRecording} style={styles.micButton}>
                                 <FontAwesome5 name={isPlaying ? "pause" : "play"} size={width * 0.08} color="white" />
                             </TouchableOpacity>
-                            <Text style={styles.reviewLabel}>{isPlaying ? "Playing Recording" : "Not Playing Recording"}</Text>
+                            <View style={[styles.playingStatusTag, isPlaying ? styles.inProgressStatus : styles.failedStatus]}>
+                                <Text style={styles.statusText}>{isPlaying ? "Playing Recording" : "Not Playing Recording"}</Text>
+                            </View>
                             <Text style={styles.reviewLabel}>Expected:</Text>
                             <Text style={styles.reviewText}>{tongueTwisters[currentStep]}</Text>
                             <Text style={styles.reviewLabel}>You said:</Text>
@@ -245,7 +247,9 @@ export default function TongueTwisterGame() {
                                     <TouchableOpacity onPress={playRecording} style={styles.micButton}>
                                         <FontAwesome5 name={isPlaying ? "pause" : "play"} size={width * 0.08} color="white" />
                                     </TouchableOpacity>
-                                    <Text style={styles.reviewLabel}>{isPlaying ? "Playing Recording" : "Not Playing Recording"}</Text>
+                                    <View style={[styles.playingStatusTag, isPlaying ? styles.inProgressStatus : styles.failedStatus]}>
+                                        <Text style={styles.statusText}>{isPlaying ? "Playing Recording" : "Not Playing Recording"}</Text>
+                                    </View>
                                 </>
                             )}
                             <View style={styles.timerContainer}>
@@ -359,5 +363,22 @@ const styles = StyleSheet.create({
         textAlign: "center",
         marginTop: height * 0.008,
         width: "90%",
+    },
+    playingStatusTag: {
+        paddingHorizontal: 16,
+        paddingVertical: 8,
+        borderRadius: 20,
+        marginTop: height * 0.015,
+    },
+    inProgressStatus: {
+        backgroundColor: "#638AB4",
+    },
+    failedStatus: {
+        backgroundColor: "#E74C3C",
+    },
+    statusText: {
+        color: "white",
+        fontSize: 12,
+        textAlign: "center",
     },
 });
