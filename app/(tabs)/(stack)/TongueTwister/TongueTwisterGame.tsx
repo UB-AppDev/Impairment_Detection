@@ -22,7 +22,8 @@ export default function TongueTwisterGame() {
     const db = getFirestore();
     const [recording, setRecording] = useState<Audio.Recording | null>(null);
     const [recordingUri, setRecordingUri] = useState<string | null>(null);
-    const [recordingDuration, setRecordingDuration] = useState(0);
+    const [playbackPosition, setPlaybackPosition] = useState(0);
+    const [isPlaying, setIsPlaying] = useState(false);
     const [countdown, setCountdown] = useState(60);
     const [currentStep, setCurrentStep] = useState(0);
     const [progressStatus, setProgressStatus] = useState(["inProgress", "inProgress", "inProgress", "inProgress"]);
@@ -31,6 +32,7 @@ export default function TongueTwisterGame() {
     const [showReviewScreen, setShowReviewScreen] = useState(false);
     const [transcribedText, setTranscribedText] = useState("");
     const [sound, setSound] = useState<Audio.Sound | null>(null);
+    const [isPlaybackEnded, setIsPlaybackEnded] = useState(false);
     const intervalRef = useRef<NodeJS.Timeout | null>(null);
 
     useFocusEffect(
@@ -86,22 +88,17 @@ export default function TongueTwisterGame() {
         if (!recording) return;
         clearInterval(intervalRef.current!);
         await recording.stopAndUnloadAsync();
-        const status = await recording.getStatusAsync();
-        setRecordingDuration(status.durationMillis ?? 0);
         const uri = recording.getURI();
         setRecordingUri(uri ?? null);
         setRecording(null);
     };
 
     const handleSubmit = () => {
-        const durationSeconds = Math.floor(recordingDuration / 1000);
-        const expected = tongueTwisters[currentStep].toLowerCase().trim();
-        const actual = transcribedText.toLowerCase().trim();
-        const passed = durationSeconds >= 1 && expected === actual;
+        const passed = recordingUri !== null && transcribedText.toLowerCase().trim() === tongueTwisters[currentStep].toLowerCase().trim();
 
         const result = {
             question: currentStep + 1,
-            duration: durationSeconds,
+            duration: 0,
             passed,
             prompt: tongueTwisters[currentStep],
             uri: recordingUri
@@ -121,10 +118,13 @@ export default function TongueTwisterGame() {
 
     const handleContinue = () => {
         setShowReviewScreen(false);
+        if (sound) {
+            sound.unloadAsync();
+            setSound(null);
+        }
         if (currentStep < 3) {
-            setCurrentStep(currentStep + 1);
+            setCurrentStep(prev => prev + 1);
             setRecording(null);
-            setRecordingDuration(0);
             setRecordingUri(null);
             setTranscribedText("");
             setCountdown(60);
@@ -139,7 +139,6 @@ export default function TongueTwisterGame() {
         if (!user) return;
 
         const passedQuestions = data.filter(q => q.passed).length;
-        const averageDuration = data.reduce((sum, q) => sum + q.duration, 0) / data.length;
         const overallPassed = passedQuestions >= 2;
 
         const gameRecord = {
@@ -147,7 +146,7 @@ export default function TongueTwisterGame() {
             type: "Tongue Twister",
             totalQuestions: data.length,
             passedQuestions,
-            averageDuration,
+            averageDuration: 0,
             overallPassed,
             questions: data
         };
@@ -160,9 +159,39 @@ export default function TongueTwisterGame() {
 
     const playRecording = async () => {
         if (!recordingUri) return;
-        const { sound: newSound } = await Audio.Sound.createAsync({ uri: recordingUri });
-        await newSound.playAsync();
+
+        if (sound && isPlaying) {
+            await sound.pauseAsync();
+            setIsPlaying(false);
+            return;
+        }
+
+        if (sound && !isPlaying && !isPlaybackEnded) {
+            await sound.playAsync();
+            setIsPlaying(true);
+            return;
+        }
+
+        if (sound && isPlaybackEnded) {
+            await sound.unloadAsync();
+            setSound(null);
+            setIsPlaybackEnded(false);
+        }
+
+        const { sound: newSound } = await Audio.Sound.createAsync({ uri: recordingUri }, { shouldPlay: true });
         setSound(newSound);
+        setIsPlaying(true);
+
+        newSound.setOnPlaybackStatusUpdate(status => {
+            if (!status.isLoaded) return;
+            if (status.didJustFinish) {
+                setIsPlaying(false);
+                setPlaybackPosition(0);
+                setIsPlaybackEnded(true);
+            } else {
+                setPlaybackPosition(status.positionMillis ?? 0);
+            }
+        });
     };
 
     const simulateTranscription = async () => {
@@ -186,8 +215,9 @@ export default function TongueTwisterGame() {
                         <>
                             <Text style={styles.carouselText}>Your Response Review</Text>
                             <TouchableOpacity onPress={playRecording} style={styles.micButton}>
-                                <FontAwesome5 name="play" size={width * 0.2} color="white" />
+                                <FontAwesome5 name={isPlaying ? "pause" : "play"} size={width * 0.08} color="white" />
                             </TouchableOpacity>
+                            <Text style={styles.reviewLabel}>{isPlaying ? "Playing Recording" : "Not Playing Recording"}</Text>
                             <Text style={styles.reviewLabel}>Expected:</Text>
                             <Text style={styles.reviewText}>{tongueTwisters[currentStep]}</Text>
                             <Text style={styles.reviewLabel}>You said:</Text>
@@ -200,19 +230,27 @@ export default function TongueTwisterGame() {
                         <>
                             <Text style={styles.carouselText}>Please read the following!</Text>
                             <Text style={styles.twisterText}>{tongueTwisters[currentStep]}</Text>
-                            <TouchableOpacity onPress={recording ? stopRecording : startRecording} style={styles.micButton}>
-                                <FontAwesome5 name={recording ? "stop" : "microphone"} size={width * 0.2} color="white" />
-                            </TouchableOpacity>
-                            <View style={styles.timerContainer}>
-                                <Text style={styles.timerText}>
-                                    00:{("00" + countdown).slice(-2)}
-                                </Text>
-                            </View>
-                            {!recording && recordingUri && (
-                                <TouchableOpacity onPress={playRecording} style={styles.replayButton}>
-                                    <Text style={styles.replayButtonText}>Replay Recording</Text>
+                            {!recording && !recordingUri && (
+                                <TouchableOpacity onPress={startRecording} style={styles.micButton}>
+                                    <FontAwesome5 name="microphone" size={width * 0.08} color="white" />
                                 </TouchableOpacity>
                             )}
+                            {recording && (
+                                <TouchableOpacity onPress={stopRecording} style={styles.micButton}>
+                                    <FontAwesome5 name="stop" size={width * 0.08} color="white" />
+                                </TouchableOpacity>
+                            )}
+                            {!recording && recordingUri && (
+                                <>
+                                    <TouchableOpacity onPress={playRecording} style={styles.micButton}>
+                                        <FontAwesome5 name={isPlaying ? "pause" : "play"} size={width * 0.08} color="white" />
+                                    </TouchableOpacity>
+                                    <Text style={styles.reviewLabel}>{isPlaying ? "Playing Recording" : "Not Playing Recording"}</Text>
+                                </>
+                            )}
+                            <View style={styles.timerContainer}>
+                                <Text style={styles.timerText}>00:{("00" + countdown).slice(-2)}</Text>
+                            </View>
                             <TouchableOpacity style={styles.submitButton} onPress={handleSubmit}>
                                 <Text style={styles.submitButtonText}>Submit</Text>
                             </TouchableOpacity>
@@ -283,10 +321,11 @@ const styles = StyleSheet.create({
     },
     micButton: {
         backgroundColor: "black",
-        padding: width * 0.08,
-        borderRadius: 100,
+        padding: width * 0.04,
+        borderRadius: 50,
         justifyContent: "center",
         alignItems: "center",
+        marginVertical: height * 0.015,
     },
     timerContainer: {
         marginTop: height * 0.02,
@@ -294,18 +333,6 @@ const styles = StyleSheet.create({
     timerText: {
         color: "white",
         fontSize: width * 0.05,
-        textAlign: "center",
-    },
-    replayButton: {
-        backgroundColor: "white",
-        paddingVertical: height * 0.015,
-        paddingHorizontal: width * 0.08,
-        borderRadius: 30,
-        marginTop: height * 0.02,
-    },
-    replayButtonText: {
-        color: "#28C76F",
-        fontSize: width * 0.045,
         textAlign: "center",
     },
     submitButton: {
@@ -322,13 +349,13 @@ const styles = StyleSheet.create({
     },
     reviewLabel: {
         color: "white",
-        fontSize: width * 0.025,
+        fontSize: width * 0.03,
         marginTop: height * 0.015,
         textAlign: "center",
     },
     reviewText: {
         color: "#fff",
-        fontSize: width * 0.025,
+        fontSize: width * 0.03,
         textAlign: "center",
         marginTop: height * 0.008,
         width: "90%",
