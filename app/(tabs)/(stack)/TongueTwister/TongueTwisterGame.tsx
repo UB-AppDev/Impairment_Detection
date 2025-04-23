@@ -245,12 +245,23 @@ export default function TongueTwisterGame() {
                             )}
                             {!recording && recordingUri && (
                                 <>
-                                    <TouchableOpacity onPress={playRecording} style={styles.micButton}>
-                                        <FontAwesome5 name={isPlaying ? "pause" : "play"} size={width * 0.08} color="white" />
+                                    <TouchableOpacity onPress={startRecording} style={styles.micButton}>
+                                        <FontAwesome5 name="redo" size={width * 0.08} color="white" />
                                     </TouchableOpacity>
-                                    <View style={[styles.playingStatusTag, isPlaying ? styles.inProgressStatus : styles.failedStatus]}>
-                                        <Text style={styles.statusText}>{isPlaying ? "Playing Recording" : "Not Playing Recording"}</Text>
-                                    </View>
+                                    <TouchableOpacity onPress={() => {
+                                        if (sound) {
+                                            sound.unloadAsync();
+                                            setSound(null);
+                                        }
+                                        setRecording(null);
+                                        setRecordingUri(null);
+                                        setTranscribedText("");
+                                        setCountdown(60);
+                                    }}>
+                                        <View style={[styles.playingStatusTag, styles.redoStatus]}>
+                                            <Text style={styles.statusText}>Select here to redo your recording</Text>
+                                        </View>
+                                    </TouchableOpacity>
                                 </>
                             )}
                             <View style={styles.timerContainer}>
@@ -389,6 +400,9 @@ const styles = StyleSheet.create({
     },
     recordingStatus: {
         backgroundColor: "#25D366",
+    },
+    redoStatus: {
+        backgroundColor: "#F39C12",
     },
     statusText: {
         color: "#fff",
