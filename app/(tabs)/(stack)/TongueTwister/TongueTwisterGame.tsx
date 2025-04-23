@@ -216,7 +216,7 @@ export default function TongueTwisterGame() {
                             <Text style={styles.reviewLabel}>You said:</Text>
                             <Text style={styles.reviewText}>{transcribedText}</Text>
                             <TouchableOpacity style={styles.submitButton} onPress={handleContinue}>
-                                <Text style={styles.submitButtonText}>Next</Text>
+                                <Text style={styles.submitButtonText}>Continue</Text>
                             </TouchableOpacity>
                         </>
                     ) : (
@@ -234,9 +234,14 @@ export default function TongueTwisterGame() {
                                 </>
                             )}
                             {recording && (
-                                <TouchableOpacity onPress={stopRecording} style={styles.micButton}>
-                                    <FontAwesome5 name="stop" size={width * 0.08} color="white" />
-                                </TouchableOpacity>
+                                <>
+                                    <TouchableOpacity onPress={stopRecording} style={styles.micButton}>
+                                        <FontAwesome5 name="stop" size={width * 0.08} color="white" />
+                                    </TouchableOpacity>
+                                    <View style={[styles.playingStatusTag, styles.recordingStatus]}>
+                                        <Text style={styles.statusText}>Recording...</Text>
+                                    </View>
+                                </>
                             )}
                             {!recording && recordingUri && (
                                 <>
@@ -317,7 +322,7 @@ const styles = StyleSheet.create({
     },
     carouselText: {
         color: "#fff",
-        fontSize: width * 0.040,
+        fontSize: width * 0.045,
         textAlign: "center",
         marginBottom: height * 0.015,
         width: "90%",
@@ -381,6 +386,9 @@ const styles = StyleSheet.create({
     },
     failedStatus: {
         backgroundColor: "#E74C3C",
+    },
+    recordingStatus: {
+        backgroundColor: "#25D366",
     },
     statusText: {
         color: "#fff",
