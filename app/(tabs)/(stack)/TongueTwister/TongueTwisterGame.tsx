@@ -1,4 +1,4 @@
-import { View, Text, StyleSheet, TouchableOpacity, Dimensions } from "react-native";
+import { View, Text, StyleSheet, TouchableOpacity, Dimensions, Modal } from "react-native";
 import { FontAwesome5 } from "@expo/vector-icons";
 import { Audio } from "expo-av";
 import { useState, useCallback, useRef } from "react";
@@ -33,6 +33,7 @@ export default function TongueTwisterGame() {
     const [transcribedText, setTranscribedText] = useState("");
     const [sound, setSound] = useState<Audio.Sound | null>(null);
     const [isPlaybackEnded, setIsPlaybackEnded] = useState(false);
+    const [showModal, setShowModal] = useState(false);
     const intervalRef = useRef<NodeJS.Timeout | null>(null);
 
     useFocusEffect(
@@ -68,13 +69,11 @@ export default function TongueTwisterGame() {
     const startRecording = async () => {
         try {
             const permission = await Audio.requestPermissionsAsync();
-            if (permission.status !== 'granted') return;
-
+            if (permission.status !== "granted") return;
             await Audio.setAudioModeAsync({
                 allowsRecordingIOS: true,
                 playsInSilentModeIOS: true,
             });
-
             const newRecording = new Audio.Recording();
             await newRecording.prepareToRecordAsync(Audio.RecordingOptionsPresets.HIGH_QUALITY);
             await newRecording.startAsync();
@@ -94,8 +93,11 @@ export default function TongueTwisterGame() {
     };
 
     const handleSubmit = () => {
-        const passed = recordingUri !== null && transcribedText.toLowerCase().trim() === tongueTwisters[currentStep].toLowerCase().trim();
-
+        if (!recordingUri) {
+            setShowModal(true);
+            return;
+        }
+        const passed = transcribedText.toLowerCase().trim() === tongueTwisters[currentStep].toLowerCase().trim();
         const result = {
             question: currentStep + 1,
             duration: 0,
@@ -103,15 +105,12 @@ export default function TongueTwisterGame() {
             prompt: tongueTwisters[currentStep],
             uri: recordingUri
         };
-
         setGameData(prev => [...prev, result]);
-
         setProgressStatus(prev =>
             prev.map((status, index) =>
                 index === currentStep ? (passed ? "completed" : "failed") : status
             )
         );
-
         setShowReviewScreen(true);
         simulateTranscription();
     };
@@ -137,10 +136,8 @@ export default function TongueTwisterGame() {
     const saveResultsToFirebase = async (data: any[]) => {
         const user = auth.currentUser;
         if (!user) return;
-
         const passedQuestions = data.filter(q => q.passed).length;
         const overallPassed = passedQuestions >= 2;
-
         const gameRecord = {
             timestamp: new Date().toISOString(),
             type: "Tongue Twister",
@@ -150,7 +147,6 @@ export default function TongueTwisterGame() {
             overallPassed,
             questions: data
         };
-
         const userRef = doc(db, "users", user.uid);
         await updateDoc(userRef, {
             tongueTwisterHistory: arrayUnion(gameRecord)
@@ -159,29 +155,24 @@ export default function TongueTwisterGame() {
 
     const playRecording = async () => {
         if (!recordingUri) return;
-
         if (sound && isPlaying) {
             await sound.pauseAsync();
             setIsPlaying(false);
             return;
         }
-
         if (sound && !isPlaying && !isPlaybackEnded) {
             await sound.playAsync();
             setIsPlaying(true);
             return;
         }
-
         if (sound && isPlaybackEnded) {
             await sound.unloadAsync();
             setSound(null);
             setIsPlaybackEnded(false);
         }
-
         const { sound: newSound } = await Audio.Sound.createAsync({ uri: recordingUri }, { shouldPlay: true });
         setSound(newSound);
         setIsPlaying(true);
-
         newSound.setOnPlaybackStatusUpdate(status => {
             if (!status.isLoaded) return;
             if (status.didJustFinish) {
@@ -233,9 +224,14 @@ export default function TongueTwisterGame() {
                             <Text style={styles.carouselText}>Please read the following!</Text>
                             <Text style={styles.twisterText}>{tongueTwisters[currentStep]}</Text>
                             {!recording && !recordingUri && (
-                                <TouchableOpacity onPress={startRecording} style={styles.micButton}>
-                                    <FontAwesome5 name="microphone" size={width * 0.08} color="white" />
-                                </TouchableOpacity>
+                                <>
+                                    <TouchableOpacity onPress={startRecording} style={styles.micButton}>
+                                        <FontAwesome5 name="microphone" size={width * 0.08} color="white" />
+                                    </TouchableOpacity>
+                                    <View style={[styles.playingStatusTag, styles.failedStatus]}>
+                                        <Text style={styles.statusText}>Please hit the button to begin recording</Text>
+                                    </View>
+                                </>
                             )}
                             {recording && (
                                 <TouchableOpacity onPress={stopRecording} style={styles.micButton}>
@@ -263,6 +259,16 @@ export default function TongueTwisterGame() {
                 </View>
                 <ProgressTracker progressStatus={progressStatus} />
             </View>
+            <Modal visible={showModal} transparent animationType="fade">
+                <View style={styles.modalBackground}>
+                    <View style={styles.modalContainer}>
+                        <Text style={styles.modalText}>You must complete and submit this question before proceeding.</Text>
+                        <TouchableOpacity onPress={() => setShowModal(false)} style={styles.modalButton}>
+                            <Text style={styles.modalButtonText}>Return to Question</Text>
+                        </TouchableOpacity>
+                    </View>
+                </View>
+            </Modal>
         </View>
     );
 }
@@ -310,21 +316,21 @@ const styles = StyleSheet.create({
         fontSize: width * 0.045,
     },
     carouselText: {
-        color: "white",
-        fontSize: width * 0.045,
+        color: "#fff",
+        fontSize: width * 0.040,
         textAlign: "center",
         marginBottom: height * 0.015,
         width: "90%",
     },
     twisterText: {
-        color: "white",
-        fontSize: width * 0.045,
+        color: "#000",
+        fontSize: width * 0.025,
         textAlign: "center",
         marginBottom: height * 0.03,
         width: "90%",
     },
     micButton: {
-        backgroundColor: "black",
+        backgroundColor: "#000",
         padding: width * 0.04,
         borderRadius: 50,
         justifyContent: "center",
@@ -345,7 +351,7 @@ const styles = StyleSheet.create({
         paddingVertical: height * 0.02,
         borderRadius: 30,
         alignItems: "center",
-        marginTop: height * 0.03,
+        marginTop: height * 0.02,
     },
     submitButtonText: {
         color: "#28C76F",
@@ -377,8 +383,36 @@ const styles = StyleSheet.create({
         backgroundColor: "#E74C3C",
     },
     statusText: {
-        color: "white",
-        fontSize: 12,
+        color: "#fff",
+        fontSize: 8,
         textAlign: "center",
+    },
+    modalBackground: {
+        flex: 1,
+        backgroundColor: "#000000",
+        justifyContent: "center",
+        alignItems: "center",
+    },
+    modalContainer: {
+        backgroundColor: "#28C76F",
+        padding: 30,
+        borderRadius: 20,
+        width: "80%",
+    },
+    modalText: {
+        color: "#fff",
+        fontSize: 12,
+        marginBottom: 20,
+        textAlign: "center",
+    },
+    modalButton: {
+        backgroundColor: "#fff",
+        paddingVertical: 12,
+        borderRadius: 20,
+    },
+    modalButtonText: {
+        color: "#000",
+        textAlign: "center",
+        fontSize: 12,
     },
 });
