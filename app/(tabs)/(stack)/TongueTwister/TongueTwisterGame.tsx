@@ -153,7 +153,7 @@ export default function TongueTwisterGame() {
         const overallPassed = passedQuestions >= 2;
         const gameRecord = {
             timestamp: new Date().toISOString(),
-            type: "Tongue Twister",
+            type: "Tongue Twisters",
             totalQuestions: data.length,
             passedQuestions,
             averageDuration: 0,
