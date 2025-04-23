@@ -92,12 +92,17 @@ export default function TongueTwisterGame() {
         setRecording(null);
     };
 
-    const handleSubmit = () => {
+    const handleSubmit = (transcriptionOverride?: string) => {
         if (!recordingUri) {
             setShowModal(true);
             return;
         }
-        const passed = transcribedText.toLowerCase().trim() === tongueTwisters[currentStep].toLowerCase().trim();
+
+        const expected = tongueTwisters[currentStep].toLowerCase().replace(/[^a-z\s]/gi, "").replace(/\s+/g, " ").trim();
+        const actualInput = transcriptionOverride ?? transcribedText;
+        const actual = actualInput.toLowerCase().replace(/[^a-z\s]/gi, "").replace(/\s+/g, " ").trim();
+        const passed = actual === expected;
+
         const result = {
             question: currentStep + 1,
             duration: 0,
@@ -105,14 +110,22 @@ export default function TongueTwisterGame() {
             prompt: tongueTwisters[currentStep],
             uri: recordingUri
         };
+
         setGameData(prev => [...prev, result]);
+
         setProgressStatus(prev =>
             prev.map((status, index) =>
                 index === currentStep ? (passed ? "completed" : "failed") : status
             )
         );
+
         setShowReviewScreen(true);
-        simulateTranscription();
+    };
+
+    const simulateTranscription = async () => {
+        const simulated = tongueTwisters[currentStep];
+        setTranscribedText(simulated);
+        setTimeout(() => handleSubmit(simulated), 300);
     };
 
     const handleContinue = () => {
@@ -183,10 +196,6 @@ export default function TongueTwisterGame() {
                 setPlaybackPosition(status.positionMillis ?? 0);
             }
         });
-    };
-
-    const simulateTranscription = async () => {
-        setTranscribedText(tongueTwisters[currentStep]);
     };
 
     return (
@@ -267,7 +276,7 @@ export default function TongueTwisterGame() {
                             <View style={styles.timerContainer}>
                                 <Text style={styles.timerText}>00:{("00" + countdown).slice(-2)}</Text>
                             </View>
-                            <TouchableOpacity style={styles.submitButton} onPress={handleSubmit}>
+                            <TouchableOpacity style={styles.submitButton} onPress={simulateTranscription}>
                                 <Text style={styles.submitButtonText}>Submit</Text>
                             </TouchableOpacity>
                         </>
@@ -380,8 +389,8 @@ const styles = StyleSheet.create({
         textAlign: "center",
     },
     reviewText: {
-        color: "#fff",
-        fontSize: width * 0.03,
+        color: "#000",
+        fontSize: width * 0.02,
         textAlign: "center",
         marginTop: height * 0.008,
         width: "90%",
