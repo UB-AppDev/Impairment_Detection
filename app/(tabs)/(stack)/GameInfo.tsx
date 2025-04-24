@@ -18,10 +18,7 @@ export default function AccuracyScreen() {
           <View style={styles.gameWrapper}>
             <View style={styles.gameContainer}>
               {data?.topContent}
-              <Text style={styles.carouselText}>This test requires you to PUNCH the screen</Text>
-              <Text style={styles.testerLabel}>Test Data</Text>
-              <Text>{game}</Text>
-              <Text>{data?.startRoute}</Text>
+              <Text style={styles.carouselText}>This test requires you to tap the screen</Text>
               <View style={styles.paginationDots}>
                 <View style={styles.dot} />
                 <View style={[styles.dot, styles.activeDot]} />

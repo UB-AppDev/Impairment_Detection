@@ -23,6 +23,12 @@ export const StroopGameGen = () =>{
         colors.splice(index,1);
     }
 
+    // randomize the options
+    for (let i = options.length - 1; i > 0; i--) {
+        const j = Math.floor(Math.random() * (i + 1));
+        [options[i], options[j]] = [options[j], options[i]];
+    }
+
     
     
     return {
