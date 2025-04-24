@@ -18,7 +18,10 @@ export default function AccuracyScreen() {
           <View style={styles.gameWrapper}>
             <View style={styles.gameContainer}>
               {data?.topContent}
-              <Text style={styles.carouselText}>This test requires you to tap the screen</Text>
+              <Text style={styles.carouselText}>This test requires you to PUNCH the screen</Text>
+              <Text style={styles.testerLabel}>Test Data</Text>
+              <Text>{game}</Text>
+              <Text>{data?.startRoute}</Text>
               <View style={styles.paginationDots}>
                 <View style={styles.dot} />
                 <View style={[styles.dot, styles.activeDot]} />
@@ -170,5 +173,12 @@ const gameData: any = {
         "Balance on one leg while completing simple mental tasks on screen. This test helps measure stability and multitasking ability.",
     startRoute: "/(tabs)/(stack)/LegBalance/TermsOfConditons",
     topContent: <Text style={styles.twisterText}>RED</Text>,
+  },
+  "visual-pursuit": {
+    title: "Visual Pursuit Game",
+    description:
+        "Use your Eyes to navigate a maze",
+    startRoute: "/(tabs)/(stack)/VisualPursuit/VisualPursuitGame",
+    topContent: <Text style={styles.twisterText}>Visual Pursit</Text>,
   },
 };
