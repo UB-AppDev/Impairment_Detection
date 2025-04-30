@@ -171,4 +171,13 @@ const gameData: any = {
     startRoute: "/(tabs)/(stack)/LegBalance/TermsOfConditons",
     topContent: <Text style={styles.twisterText}>RED</Text>,
   },
+  "visual-pursuits": {
+    title: "Visual Pursuits Game",
+    description:
+        "Follow a moving object with your eyes while keeping your face aligned with the screen. This test measures visual tracking and coordination.",
+    startRoute: "/(tabs)/(stack)/VisualPursuits/VisualPursuitsGame",
+    topContent: (
+        <Ionicons name="eye-outline" size={width * 0.2} color="black" />
+    ),
+  },
 };
