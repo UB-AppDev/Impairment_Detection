@@ -38,7 +38,7 @@ const testItems = [
   { text: "Choice Reaction", icon: "hand-paper", route: "/(tabs)/(stack)/GameInfo?game=choice-reaction" },
   { text: "Single Leg Balance", icon: "balance-scale", route: "/(tabs)/(stack)/GameInfo?game=leg-balance" },
   { text: "Tongue Twisters", icon: "comment-dots", route: "/(tabs)/(stack)/GameInfo?game=tongue-twister" },
-  { text: "Visual Pursuit", icon: "eye", route: "/(tabs)/(stack)/GameInfo?game=visual-pursuit" }
+  { text: "Visual Pursuit", icon: "eye", route: "/(tabs)/(stack)/GameInfo?game=visual-pursuits" }
 ];
 
 const styles = StyleSheet.create({
