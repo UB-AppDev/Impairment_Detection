@@ -21,8 +21,9 @@ export default function StatisticsScreen() {
             const userSnap = await getDoc(userRef);
             if (userSnap.exists()) {
                 const data = userSnap.data();
-                const { memoryCheckHistory = [] } = data || {};
-                const sorted = [...memoryCheckHistory].sort((a, b) => new Date(b.timestamp) - new Date(a.timestamp));
+                const { memoryCheckHistory = [], tongueTwisterHistory = [] } = data || {};
+                const combined = [...memoryCheckHistory, ...tongueTwisterHistory];
+                const sorted = combined.sort((a, b) => new Date(b.timestamp) - new Date(a.timestamp));
                 setGameData(sorted);
                 setLoading(false);
             }

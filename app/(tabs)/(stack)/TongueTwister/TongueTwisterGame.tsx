@@ -1,4 +1,4 @@
-import { View, Text, StyleSheet, TouchableOpacity, Dimensions } from "react-native";
+import { View, Text, StyleSheet, TouchableOpacity, Dimensions, Modal } from "react-native";
 import { FontAwesome5 } from "@expo/vector-icons";
 import { Audio } from "expo-av";
 import { useState, useCallback, useRef } from "react";
@@ -22,7 +22,8 @@ export default function TongueTwisterGame() {
     const db = getFirestore();
     const [recording, setRecording] = useState<Audio.Recording | null>(null);
     const [recordingUri, setRecordingUri] = useState<string | null>(null);
-    const [recordingDuration, setRecordingDuration] = useState(0);
+    const [playbackPosition, setPlaybackPosition] = useState(0);
+    const [isPlaying, setIsPlaying] = useState(false);
     const [countdown, setCountdown] = useState(60);
     const [currentStep, setCurrentStep] = useState(0);
     const [progressStatus, setProgressStatus] = useState(["inProgress", "inProgress", "inProgress", "inProgress"]);
@@ -31,6 +32,8 @@ export default function TongueTwisterGame() {
     const [showReviewScreen, setShowReviewScreen] = useState(false);
     const [transcribedText, setTranscribedText] = useState("");
     const [sound, setSound] = useState<Audio.Sound | null>(null);
+    const [isPlaybackEnded, setIsPlaybackEnded] = useState(false);
+    const [showModal, setShowModal] = useState(false);
     const intervalRef = useRef<NodeJS.Timeout | null>(null);
 
     useFocusEffect(
@@ -66,13 +69,11 @@ export default function TongueTwisterGame() {
     const startRecording = async () => {
         try {
             const permission = await Audio.requestPermissionsAsync();
-            if (permission.status !== 'granted') return;
-
+            if (permission.status !== "granted") return;
             await Audio.setAudioModeAsync({
                 allowsRecordingIOS: true,
                 playsInSilentModeIOS: true,
             });
-
             const newRecording = new Audio.Recording();
             await newRecording.prepareToRecordAsync(Audio.RecordingOptionsPresets.HIGH_QUALITY);
             await newRecording.startAsync();
@@ -86,22 +87,25 @@ export default function TongueTwisterGame() {
         if (!recording) return;
         clearInterval(intervalRef.current!);
         await recording.stopAndUnloadAsync();
-        const status = await recording.getStatusAsync();
-        setRecordingDuration(status.durationMillis ?? 0);
         const uri = recording.getURI();
         setRecordingUri(uri ?? null);
         setRecording(null);
     };
 
-    const handleSubmit = () => {
-        const durationSeconds = Math.floor(recordingDuration / 1000);
-        const expected = tongueTwisters[currentStep].toLowerCase().trim();
-        const actual = transcribedText.toLowerCase().trim();
-        const passed = durationSeconds >= 1 && expected === actual;
+    const handleSubmit = (transcriptionOverride?: string) => {
+        if (!recordingUri) {
+            setShowModal(true);
+            return;
+        }
+
+        const expected = tongueTwisters[currentStep].toLowerCase().replace(/[^a-z\s]/gi, "").replace(/\s+/g, " ").trim();
+        const actualInput = transcriptionOverride ?? transcribedText;
+        const actual = actualInput.toLowerCase().replace(/[^a-z\s]/gi, "").replace(/\s+/g, " ").trim();
+        const passed = actual === expected;
 
         const result = {
             question: currentStep + 1,
-            duration: durationSeconds,
+            duration: 0,
             passed,
             prompt: tongueTwisters[currentStep],
             uri: recordingUri
@@ -116,15 +120,23 @@ export default function TongueTwisterGame() {
         );
 
         setShowReviewScreen(true);
-        simulateTranscription();
+    };
+
+    const simulateTranscription = async () => {
+        const simulated = tongueTwisters[currentStep];
+        setTranscribedText(simulated);
+        setTimeout(() => handleSubmit(simulated), 300);
     };
 
     const handleContinue = () => {
         setShowReviewScreen(false);
+        if (sound) {
+            sound.unloadAsync();
+            setSound(null);
+        }
         if (currentStep < 3) {
-            setCurrentStep(currentStep + 1);
+            setCurrentStep(prev => prev + 1);
             setRecording(null);
-            setRecordingDuration(0);
             setRecordingUri(null);
             setTranscribedText("");
             setCountdown(60);
@@ -137,21 +149,17 @@ export default function TongueTwisterGame() {
     const saveResultsToFirebase = async (data: any[]) => {
         const user = auth.currentUser;
         if (!user) return;
-
         const passedQuestions = data.filter(q => q.passed).length;
-        const averageDuration = data.reduce((sum, q) => sum + q.duration, 0) / data.length;
         const overallPassed = passedQuestions >= 2;
-
         const gameRecord = {
             timestamp: new Date().toISOString(),
-            type: "Tongue Twister",
+            type: "Tongue Twisters",
             totalQuestions: data.length,
             passedQuestions,
-            averageDuration,
+            averageDuration: 0,
             overallPassed,
             questions: data
         };
-
         const userRef = doc(db, "users", user.uid);
         await updateDoc(userRef, {
             tongueTwisterHistory: arrayUnion(gameRecord)
@@ -160,13 +168,34 @@ export default function TongueTwisterGame() {
 
     const playRecording = async () => {
         if (!recordingUri) return;
-        const { sound: newSound } = await Audio.Sound.createAsync({ uri: recordingUri });
-        await newSound.playAsync();
+        if (sound && isPlaying) {
+            await sound.pauseAsync();
+            setIsPlaying(false);
+            return;
+        }
+        if (sound && !isPlaying && !isPlaybackEnded) {
+            await sound.playAsync();
+            setIsPlaying(true);
+            return;
+        }
+        if (sound && isPlaybackEnded) {
+            await sound.unloadAsync();
+            setSound(null);
+            setIsPlaybackEnded(false);
+        }
+        const { sound: newSound } = await Audio.Sound.createAsync({ uri: recordingUri }, { shouldPlay: true });
         setSound(newSound);
-    };
-
-    const simulateTranscription = async () => {
-        setTranscribedText(tongueTwisters[currentStep]);
+        setIsPlaying(true);
+        newSound.setOnPlaybackStatusUpdate(status => {
+            if (!status.isLoaded) return;
+            if (status.didJustFinish) {
+                setIsPlaying(false);
+                setPlaybackPosition(0);
+                setIsPlaybackEnded(true);
+            } else {
+                setPlaybackPosition(status.positionMillis ?? 0);
+            }
+        });
     };
 
     return (
@@ -186,34 +215,68 @@ export default function TongueTwisterGame() {
                         <>
                             <Text style={styles.carouselText}>Your Response Review</Text>
                             <TouchableOpacity onPress={playRecording} style={styles.micButton}>
-                                <FontAwesome5 name="play" size={width * 0.2} color="white" />
+                                <FontAwesome5 name={isPlaying ? "pause" : "play"} size={width * 0.08} color="white" />
                             </TouchableOpacity>
+                            <View style={[styles.playingStatusTag, isPlaying ? styles.inProgressStatus : styles.failedStatus]}>
+                                <Text style={styles.statusText}>{isPlaying ? "Playing Recording" : "Not Playing Recording"}</Text>
+                            </View>
                             <Text style={styles.reviewLabel}>Expected:</Text>
                             <Text style={styles.reviewText}>{tongueTwisters[currentStep]}</Text>
                             <Text style={styles.reviewLabel}>You said:</Text>
                             <Text style={styles.reviewText}>{transcribedText}</Text>
                             <TouchableOpacity style={styles.submitButton} onPress={handleContinue}>
-                                <Text style={styles.submitButtonText}>Next</Text>
+                                <Text style={styles.submitButtonText}>Continue</Text>
                             </TouchableOpacity>
                         </>
                     ) : (
                         <>
                             <Text style={styles.carouselText}>Please read the following!</Text>
                             <Text style={styles.twisterText}>{tongueTwisters[currentStep]}</Text>
-                            <TouchableOpacity onPress={recording ? stopRecording : startRecording} style={styles.micButton}>
-                                <FontAwesome5 name={recording ? "stop" : "microphone"} size={width * 0.2} color="white" />
-                            </TouchableOpacity>
-                            <View style={styles.timerContainer}>
-                                <Text style={styles.timerText}>
-                                    00:{("00" + countdown).slice(-2)}
-                                </Text>
-                            </View>
-                            {!recording && recordingUri && (
-                                <TouchableOpacity onPress={playRecording} style={styles.replayButton}>
-                                    <Text style={styles.replayButtonText}>Replay Recording</Text>
-                                </TouchableOpacity>
+                            {!recording && !recordingUri && (
+                                <>
+                                    <TouchableOpacity onPress={startRecording} style={styles.micButton}>
+                                        <FontAwesome5 name="microphone" size={width * 0.08} color="white" />
+                                    </TouchableOpacity>
+                                    <View style={[styles.playingStatusTag, styles.failedStatus]}>
+                                        <Text style={styles.statusText}>Please hit the button to begin recording</Text>
+                                    </View>
+                                </>
                             )}
-                            <TouchableOpacity style={styles.submitButton} onPress={handleSubmit}>
+                            {recording && (
+                                <>
+                                    <TouchableOpacity onPress={stopRecording} style={styles.micButton}>
+                                        <FontAwesome5 name="stop" size={width * 0.08} color="white" />
+                                    </TouchableOpacity>
+                                    <View style={[styles.playingStatusTag, styles.recordingStatus]}>
+                                        <Text style={styles.statusText}>Recording...</Text>
+                                    </View>
+                                </>
+                            )}
+                            {!recording && recordingUri && (
+                                <>
+                                    <TouchableOpacity onPress={startRecording} style={styles.micButton}>
+                                        <FontAwesome5 name="redo" size={width * 0.08} color="white" />
+                                    </TouchableOpacity>
+                                    <TouchableOpacity onPress={() => {
+                                        if (sound) {
+                                            sound.unloadAsync();
+                                            setSound(null);
+                                        }
+                                        setRecording(null);
+                                        setRecordingUri(null);
+                                        setTranscribedText("");
+                                        setCountdown(60);
+                                    }}>
+                                        <View style={[styles.playingStatusTag, styles.redoStatus]}>
+                                            <Text style={styles.statusText}>Select here to redo your recording</Text>
+                                        </View>
+                                    </TouchableOpacity>
+                                </>
+                            )}
+                            <View style={styles.timerContainer}>
+                                <Text style={styles.timerText}>00:{("00" + countdown).slice(-2)}</Text>
+                            </View>
+                            <TouchableOpacity style={styles.submitButton} onPress={simulateTranscription}>
                                 <Text style={styles.submitButtonText}>Submit</Text>
                             </TouchableOpacity>
                         </>
@@ -221,6 +284,16 @@ export default function TongueTwisterGame() {
                 </View>
                 <ProgressTracker progressStatus={progressStatus} />
             </View>
+            <Modal visible={showModal} transparent animationType="fade">
+                <View style={styles.modalBackground}>
+                    <View style={styles.modalContainer}>
+                        <Text style={styles.modalText}>You must complete and submit this question before proceeding.</Text>
+                        <TouchableOpacity onPress={() => setShowModal(false)} style={styles.modalButton}>
+                            <Text style={styles.modalButtonText}>Return to Question</Text>
+                        </TouchableOpacity>
+                    </View>
+                </View>
+            </Modal>
         </View>
     );
 }
@@ -268,25 +341,26 @@ const styles = StyleSheet.create({
         fontSize: width * 0.045,
     },
     carouselText: {
-        color: "white",
+        color: "#fff",
         fontSize: width * 0.045,
         textAlign: "center",
         marginBottom: height * 0.015,
         width: "90%",
     },
     twisterText: {
-        color: "white",
-        fontSize: width * 0.045,
+        color: "#000",
+        fontSize: width * 0.025,
         textAlign: "center",
         marginBottom: height * 0.03,
         width: "90%",
     },
     micButton: {
-        backgroundColor: "black",
-        padding: width * 0.08,
-        borderRadius: 100,
+        backgroundColor: "#000",
+        padding: width * 0.04,
+        borderRadius: 50,
         justifyContent: "center",
         alignItems: "center",
+        marginVertical: height * 0.015,
     },
     timerContainer: {
         marginTop: height * 0.02,
@@ -296,25 +370,13 @@ const styles = StyleSheet.create({
         fontSize: width * 0.05,
         textAlign: "center",
     },
-    replayButton: {
-        backgroundColor: "white",
-        paddingVertical: height * 0.015,
-        paddingHorizontal: width * 0.08,
-        borderRadius: 30,
-        marginTop: height * 0.02,
-    },
-    replayButtonText: {
-        color: "#28C76F",
-        fontSize: width * 0.045,
-        textAlign: "center",
-    },
     submitButton: {
         backgroundColor: "#fff",
         width: "80%",
         paddingVertical: height * 0.02,
         borderRadius: 30,
         alignItems: "center",
-        marginTop: height * 0.03,
+        marginTop: height * 0.02,
     },
     submitButtonText: {
         color: "#28C76F",
@@ -322,15 +384,66 @@ const styles = StyleSheet.create({
     },
     reviewLabel: {
         color: "white",
-        fontSize: width * 0.025,
+        fontSize: width * 0.03,
         marginTop: height * 0.015,
         textAlign: "center",
     },
     reviewText: {
-        color: "#fff",
-        fontSize: width * 0.025,
+        color: "#000",
+        fontSize: width * 0.02,
         textAlign: "center",
         marginTop: height * 0.008,
         width: "90%",
+    },
+    playingStatusTag: {
+        paddingHorizontal: 16,
+        paddingVertical: 8,
+        borderRadius: 20,
+        marginTop: height * 0.015,
+    },
+    inProgressStatus: {
+        backgroundColor: "#638AB4",
+    },
+    failedStatus: {
+        backgroundColor: "#E74C3C",
+    },
+    recordingStatus: {
+        backgroundColor: "#25D366",
+    },
+    redoStatus: {
+        backgroundColor: "#F39C12",
+    },
+    statusText: {
+        color: "#fff",
+        fontSize: 8,
+        textAlign: "center",
+    },
+    modalBackground: {
+        flex: 1,
+        backgroundColor: "#000000",
+        justifyContent: "center",
+        alignItems: "center",
+    },
+    modalContainer: {
+        backgroundColor: "#28C76F",
+        padding: 30,
+        borderRadius: 20,
+        width: "80%",
+    },
+    modalText: {
+        color: "#fff",
+        fontSize: 12,
+        marginBottom: 20,
+        textAlign: "center",
+    },
+    modalButton: {
+        backgroundColor: "#fff",
+        paddingVertical: 12,
+        borderRadius: 20,
+    },
+    modalButtonText: {
+        color: "#000",
+        textAlign: "center",
+        fontSize: 12,
     },
 });

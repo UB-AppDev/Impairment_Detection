@@ -16,6 +16,8 @@ export default function GamesLayout() {
 
             <Stack.Screen name="MemoryCheck/MCGInstructions" />
             <Stack.Screen name="MemoryCheck/MemoryCheckGame" />
+
+            <Stack.Screen name="EyeTracker/VisualPursuitsGame" />
             
 
         </Stack>

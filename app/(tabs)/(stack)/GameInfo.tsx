@@ -1,8 +1,8 @@
-import { View, Text, StyleSheet, TouchableOpacity, ScrollView, Dimensions } from "react-native";
-import { useRouter, useLocalSearchParams } from "expo-router";
-import { Ionicons } from "@expo/vector-icons";
 import DashboardHeader from "@/components/DashboardHeader";
 import StroopBrick from "@/components/StroopBrick";
+import { Ionicons } from "@expo/vector-icons";
+import { useLocalSearchParams, useRouter } from "expo-router";
+import { Dimensions, ScrollView, StyleSheet, Text, TouchableOpacity, View } from "react-native";
 
 const { width, height } = Dimensions.get("window");
 
@@ -171,11 +171,13 @@ const gameData: any = {
     startRoute: "/(tabs)/(stack)/LegBalance/TermsOfConditons",
     topContent: <Text style={styles.twisterText}>RED</Text>,
   },
-  "visual-pursuit": {
-    title: "Visual Pursuit Game",
+  "visual-pursuits": {
+    title: "Visual Pursuits Game",
     description:
-        "Use your Eyes to navigate a maze",
-    startRoute: "/(tabs)/(stack)/VisualPursuit/VisualPursuitGame",
-    topContent: <Text style={styles.twisterText}>Visual Pursit</Text>,
+        "Follow a moving object with your eyes while keeping your face aligned with the screen. This test measures visual tracking and coordination.",
+    startRoute: "/(tabs)/(stack)/VisualPursuits/VisualPursuitsGame",
+    topContent: (
+        <Ionicons name="eye-outline" size={width * 0.2} color="black" />
+    ),
   },
 };
